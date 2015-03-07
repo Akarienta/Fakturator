@@ -1,0 +1,12 @@
+<fop version="1.0">
+    <use-cache>false</use-cache>
+    <renderers>
+        <renderer mime="application/pdf">
+            <fonts>
+                <font kerning="yes" embed-url="src/cz/akarienta/fakturator/pdf/calibri.ttf">
+                    <font-triplet name="Calibri" style="normal" weight="normal"/>
+                </font>
+            </fonts>
+        </renderer>
+    </renderers>
+</fop>

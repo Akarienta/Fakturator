@@ -1,0 +1,792 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Menu class="javax.swing.JMenuBar" name="menu">
+      <SubComponents>
+        <Menu class="javax.swing.JMenu" name="file">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/cz/akarienta/fakturator/img/house.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Soubor"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="newInvoice">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+N"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/cz/akarienta/fakturator/img/file-text.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Nov&#xe1; faktura"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newInvoiceActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="settings">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/cz/akarienta/fakturator/img/wrench-screwdriver.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Nastaven&#xed;"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="contractor">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Shift+D"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/cz/akarienta/fakturator/img/user-male.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Dodavatel"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="contractorActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="customerEntry">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Shift+O"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/cz/akarienta/fakturator/img/address-book-alt.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Odb&#x11b;ratel&#xe9;"/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="help">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/cz/akarienta/fakturator/img/life-buoy.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="N&#xe1;pov&#x11b;da"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="about">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="F1"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/cz/akarienta/fakturator/img/light-bulb.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="O programu"/>
+              </Properties>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+      </SubComponents>
+    </Menu>
+  </NonVisualComponents>
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="Fakturator"/>
+    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[784, 620]"/>
+    </Property>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[784, 620]"/>
+    </Property>
+    <Property name="name" type="java.lang.String" value="mainFrame" noResource="true"/>
+    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[784, 620]"/>
+    </Property>
+    <Property name="resizable" type="boolean" value="false"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="menuBar" type="java.lang.String" value="menu"/>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,83,0,0,3,16"/>
+  </AuxValues>
+
+  <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+    <Property name="useNullLayout" type="boolean" value="false"/>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="welcomePanel">
+      <Properties>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 620]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 620]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 620]"/>
+        </Property>
+      </Properties>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="0" y="0" width="780" height="620"/>
+        </Constraint>
+      </Constraints>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
+        <Property name="useNullLayout" type="boolean" value="false"/>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="logo">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/cz/akarienta/fakturator/img/logo.png"/>
+            </Property>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="190" y="200" width="-1" height="-1"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="javax.swing.JLabel" name="appName">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Berlin Sans FB Demi" size="48" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Fakturator"/>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+              <AbsoluteConstraints x="360" y="250" width="-1" height="47"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="newInvoicePanel">
+      <Properties>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 600]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 600]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 600]"/>
+        </Property>
+      </Properties>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="0" y="0" width="780" height="600"/>
+        </Constraint>
+      </Constraints>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Component id="tablePanel" max="32767" attributes="0"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="notification" alignment="1" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="dateOfIssue" min="-2" max="-2" attributes="0"/>
+                              <Component id="invoiceNumber" alignment="1" min="-2" pref="108" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="18" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="dateOfIssueField" min="-2" pref="227" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="invoiceNumberField" min="-2" pref="56" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="userAsInvoiceNumber" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="dateOfValidity" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="dateOfValidtyField" min="-2" pref="225" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="customer" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="customerList" min="-2" pref="225" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="itemName" min="-2" max="-2" attributes="0"/>
+                                      <Component id="itemPrice" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="itemPriceField" min="-2" pref="178" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                                          <Component id="currency" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="addItem" min="-2" pref="293" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="itemNameField" min="-2" pref="520" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="newItemHeadline" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="deleteItemHeadline" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="itemId" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="itemIdField" min="-2" pref="125" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="deleteItem" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="234" max="-2" attributes="0"/>
+                  <Component id="printInvoice" min="-2" pref="291" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="notification" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="invoiceNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="invoiceNumberField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customer" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerList" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="userAsInvoiceNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="dateOfValidtyField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="dateOfValidity" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="dateOfIssueField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="dateOfIssue" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="newItemHeadline" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="deleteItemHeadline" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="itemName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="itemNameField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="itemIdField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="itemId" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="itemPrice" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="itemPriceField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="currency" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="addItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="deleteItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="tablePanel" min="-2" pref="240" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="printInvoice" min="-2" pref="53" max="-2" attributes="0"/>
+                  <EmptySpace pref="54" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="customer">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Odb&#x11b;ratel"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="invoiceNumber">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="&#x10c;&#xed;slo dokladu"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="customerList">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Default Cursor"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="invoiceNumberField">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="invoiceNumberFieldActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="dateOfIssue">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Datum vystaven&#xed;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="dateOfValidity">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Datum splatnosti"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="dateOfIssueField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="dateOfValidtyField">
+        </Component>
+        <Component class="javax.swing.JLabel" name="newItemHeadline">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Nov&#xe1; polo&#x17e;ka"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="itemName">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="N&#xe1;zev"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="itemPrice">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Cena"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="itemNameField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="itemPriceField">
+        </Component>
+        <Container class="javax.swing.JScrollPane" name="tablePanel">
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JTable" name="table">
+              <Properties>
+                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                  <Table columnCount="3" rowCount="0">
+                    <Column editable="false" title="ID" type="java.lang.Integer"/>
+                    <Column editable="true" title="N&#xe1;zev" type="java.lang.String"/>
+                    <Column editable="true" title="Cena (K&#x10d;)" type="java.lang.Double"/>
+                  </Table>
+                </Property>
+                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                  <TableColumnModel selectionModel="0">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="20" resizable="false">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="500" resizable="false">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="100" resizable="false">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                  </TableColumnModel>
+                </Property>
+                <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                  <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                </Property>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JButton" name="addItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="P&#x159;idat"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addItemActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="deleteItemHeadline">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Smazat polo&#x17e;ku"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="currency">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="K&#x10d;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="itemIdField">
+        </Component>
+        <Component class="javax.swing.JLabel" name="itemId">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="ID"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="deleteItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Smazat"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteItemActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JToggleButton" name="printInvoice">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="18" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="VYSTAVIT FAKTURU"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="printInvoiceActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="notification">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="userAsInvoiceNumber">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="pou&#x17e;&#xed;t pro &#x10d;&#xed;slov&#xe1;n&#xed;"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="contractorPanel">
+      <Properties>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 600]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 600]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 600]"/>
+        </Property>
+      </Properties>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="0" y="0" width="780" height="600"/>
+        </Constraint>
+      </Constraints>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="120" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="contractorAccountNumber" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorBank" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorPhone" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorMail" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorPostalCode" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorIco" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorWeb" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorSignatureFile" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="contractorSignatureFileField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="contractorIcoField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="contractorBankField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="contractorAccountNumberField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="contractorPhoneField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="contractorMialField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="contractorWebField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="contractorPostalCodeField" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="contractorSave" alignment="0" pref="249" max="32767" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="contractorBankNote" min="-2" max="-2" attributes="0"/>
+                                      <Component id="contractorAccountNumberNote" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="contractorName" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorAddress" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorCity" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="contractorAddressField" pref="249" max="32767" attributes="0"/>
+                                  <Component id="contractorCityField" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="contractorNameField" min="-2" pref="249" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="contractorNameNote" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace pref="18" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorNameField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorNameNote" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorAddressField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorAddress" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorCityField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorCity" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorPostalCodeField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorPostalCode" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorIcoField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorIco" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorBankField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorBank" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorBankNote" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorAccountNumberField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorAccountNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorAccountNumberNote" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorPhoneField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorPhone" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorMialField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorMail" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorWebField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorWeb" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="contractorSignatureFileField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorSignatureFile" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  <Component id="contractorSave" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="contractorName">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Jm&#xe9;no"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorNameField">
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorAddress">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Ulice a &#x10d;&#xed;slo popisn&#xe9;/orienta&#x10d;n&#xed;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorAddressField">
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorCity">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="M&#x11b;sto"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorPostalCode">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="PS&#x10c;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorIco">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="I&#x10c;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorBank">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Banka"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorAccountNumber">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="&#x10c;&#xed;slo &#xfa;&#x10d;tu"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorPhone">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Telefon"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorMail">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="E-mail"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorWeb">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Web"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorCityField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorIcoField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorPostalCodeField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorBankField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorAccountNumberField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorPhoneField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorMialField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorWebField">
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorSignatureFile">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Obr&#xe1;zek podpisu"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="contractorSignatureFileField">
+        </Component>
+        <Component class="javax.swing.JToggleButton" name="contractorSave">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Ulo&#x17e;it &#xfa;daje"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="* tu&#x10d;n&#x11b; vyzna&#x10d;en&#xe9; &#xfa;daje je nutn&#xe9; vyplnit"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorNameNote">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="2"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="v&#x10d;etn&#x11b; p&#x159;&#xed;p. titul&#x16f; a prost&#x159;edn&#xed;ho jm&#xe9;na"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorBankNote">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="2"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="n&#xe1;zev Va&#x161;&#xed; banky"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="contractorAccountNumberNote">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="2"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="v&#x10d;etn&#x11b; k&#xf3;du banky"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButton1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Proch&#xe1;zet..."/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>
