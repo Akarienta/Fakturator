@@ -5,11 +5,30 @@
  */
 package cz.akarienta.fakturator;
 
+import cz.akarienta.fakturator.data.Contractor;
+import cz.akarienta.fakturator.xml.XMLReader;
+import cz.akarienta.fakturator.xml.XMLWriter;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPathExpressionException;
+import org.apache.commons.io.FilenameUtils;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -17,44 +36,169 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GUI extends javax.swing.JFrame {
     
-    private static final List<JPanel> panels = new ArrayList<JPanel>();
+    private static final String CONTRACTOR_DATA = "src/cz/akarienta/fakturator/data/contractor.xml";
+    private static final String CONTRACTOR_BASE_XPATH_Q = "/contractor/";
+
+    private final List<JPanel> panels = new ArrayList<JPanel>();
     private static final List<String> customers = new ArrayList<String>();
     static {
         customers.add("Test1");
         customers.add("Test2");
     }
-    
+    private final Map<Contractor, JTextField> contractorFields = new EnumMap<Contractor, JTextField>(Contractor.class);
+    private final Map<Contractor, JLabel> contractorLabels = new EnumMap<Contractor, JLabel>(Contractor.class);
+
     private int rowId;
+    
+    private final XMLReader xmlReader = new XMLReader(CONTRACTOR_DATA);
+    private final XMLWriter xmlWriter = new XMLWriter(CONTRACTOR_DATA);
 
     /**
      * Creates new form gui
      */
     public GUI() {
         initComponents();
+        localizeFileChooser();
         buildPanels();
+        buildContractor();
+        initContractorFieldNames();
         switchToPanel(welcomePanel);
         customerList.setModel(new DefaultComboBoxModel());
-            for (String customer : customers) {
+        for (String customer : customers) {
             customerList.addItem(customer);
-        }          
-        clearNewInvoicePanel();
+        }
+        loadContractor();
     }
-    
+
+    private void localizeFileChooser() {
+        UIManager.put("FileChooser.acceptAllFileFilterText", "Všechny soubory");
+        UIManager.put("FileChooser.lookInLabelText", "Hledat v:");
+        UIManager.put("FileChooser.cancelButtonText", "Zrušit");
+        UIManager.put("FileChooser.cancelButtonToolTipText", "Zrušit");
+        UIManager.put("FileChooser.openButtonText", "Vybrat");
+        UIManager.put("FileChooser.openButtonToolTipText", "Vybrat");
+        UIManager.put("FileChooser.filesOfTypeLabelText", "Typ souboru");
+        UIManager.put("FileChooser.fileNameLabelText", "Soubor");
+        UIManager.put("FileChooser.folderNameLabelText", "Složka");
+        UIManager.put("FileChooser.listViewButtonToolTipText", "Seznam");
+        UIManager.put("FileChooser.listViewButtonAccessibleName", "Seznam");
+        UIManager.put("FileChooser.detailsViewButtonToolTipText", "Podrobnosti");
+        UIManager.put("FileChooser.detailsViewButtonAccessibleName", "Podrobnosti");
+        UIManager.put("FileChooser.upFolderToolTipText", "O stupeň výš");
+        UIManager.put("FileChooser.upFolderAccessibleName", "O stupeň výš");
+        UIManager.put("FileChooser.homeFolderToolTipText", "Domů");
+        UIManager.put("FileChooser.homeFolderAccessibleName", "Domů");
+        UIManager.put("FileChooser.fileNameHeaderText", "Jméno");
+        UIManager.put("FileChooser.fileSizeHeaderText", "Velikost");
+        UIManager.put("FileChooser.fileTypeHeaderText", "Typ souboru");
+        UIManager.put("FileChooser.fileDateHeaderText", "Datum");
+        UIManager.put("FileChooser.fileAttrHeaderText", "Atributy");
+        UIManager.put("FileChooser.openDialogTitleText", "Otevřít");
+        UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+    }
+
     private void buildPanels() {
         panels.add(welcomePanel);
         panels.add(newInvoicePanel);
         panels.add(contractorPanel);
     }
     
+    private void buildContractor() {
+        buildContractorFields();
+        buildContractorLabels();
+    }
+    
+    private void buildContractorFields() {
+        contractorFields.put(Contractor.NAME, contractorNameField);
+        contractorFields.put(Contractor.ADDRESS, contractorAddressField);
+        contractorFields.put(Contractor.CITY, contractorCityField);
+        contractorFields.put(Contractor.POSTAL_CODE, contractorPostalCodeField);
+        contractorFields.put(Contractor.ICO, contractorIcoField);
+        contractorFields.put(Contractor.BANK, contractorBankField);
+        contractorFields.put(Contractor.ACCOUNT_NUMBER, contractorAccountNumberField);
+        contractorFields.put(Contractor.PHONE, contractorPhoneField);
+        contractorFields.put(Contractor.MAIL, contractorMailField);
+        contractorFields.put(Contractor.WEB, contractorWebField);
+        contractorFields.put(Contractor.SIGNATURE_PATH, contractorSignatureFileField);
+        contractorFields.put(Contractor.RESULT_FOLDER, contractorResultFolderField);
+    }
+
+    private void buildContractorLabels() {
+        contractorLabels.put(Contractor.NAME, contractorName);
+        contractorLabels.put(Contractor.ADDRESS, contractorAddress);
+        contractorLabels.put(Contractor.CITY, contractorCity);
+        contractorLabels.put(Contractor.POSTAL_CODE, contractorPostalCode);
+        contractorLabels.put(Contractor.ICO, contractorIco);
+        contractorLabels.put(Contractor.BANK, contractorBank);
+        contractorLabels.put(Contractor.ACCOUNT_NUMBER, contractorAccountNumber);
+        contractorLabels.put(Contractor.PHONE, contractorPhone);
+        contractorLabels.put(Contractor.MAIL, contractorMail);
+        contractorLabels.put(Contractor.WEB, contractorWeb);
+        contractorLabels.put(Contractor.SIGNATURE_PATH, contractorSignatureFile);
+        contractorLabels.put(Contractor.RESULT_FOLDER, contractorResultFolder);
+    }
+    
+    private boolean isContractorOk() {
+        for(Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
+            Contractor field = contractorField.getKey();
+            
+            try {
+                String formFieldText = this.xmlReader.getElementContentText(CONTRACTOR_BASE_XPATH_Q + field.getNodeName());
+                if(field.isMandatory() && formFieldText.isEmpty()) {
+                    return false;
+                }
+            } catch (ParserConfigurationException|SAXException|XPathExpressionException|IOException ex) {
+                setError("Nastala vnitřní chyba programu - nepodařilo se načíst uložená data pro dodavatele.");
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private void initContractorFieldNames() {      
+        for(Map.Entry<Contractor, JLabel> contractorField : this.contractorLabels.entrySet()) {
+            JLabel formLabel = contractorField.getValue();
+            Contractor field = contractorField.getKey();
+
+            formLabel.setText(field.getLabel());
+            if(field.isMandatory()) {
+                formLabel.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+            }
+        }
+
+    }
+
     private void hideAllPanels() {
-        for(JPanel panel : panels) {
+        for (JPanel panel : panels) {
             panel.setVisible(false);
         }
     }
     
+    private void clearAllPanels() {
+        clearNewInvoicePanel();        
+    }
+
     private void switchToPanel(JPanel panel) {
         hideAllPanels();
+        clearAllPanels();
+        clearNotifications();
         panel.setVisible(true);
+    }
+    
+    private void loadContractor() {
+        try {          
+            XMLReader xmlReader = new XMLReader(CONTRACTOR_DATA);
+            
+            for(Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
+                JTextField formField = contractorField.getValue();
+                String nodeName = contractorField.getKey().getNodeName();
+                
+                formField.setText(xmlReader.getElementContentText(CONTRACTOR_BASE_XPATH_Q + nodeName));
+            }
+        } catch (ParserConfigurationException|SAXException|XPathExpressionException|IOException ex) {
+            setError("Nastala vnitřní chyba programu - nepodařilo se načíst uložená data pro dodavatele.");
+        }
     }
 
     /**
@@ -91,8 +235,7 @@ public class GUI extends javax.swing.JFrame {
         itemIdField = new javax.swing.JTextField();
         itemId = new javax.swing.JLabel();
         deleteItem = new javax.swing.JButton();
-        printInvoice = new javax.swing.JToggleButton();
-        notification = new javax.swing.JLabel();
+        printInvoice = new javax.swing.JButton();
         userAsInvoiceNumber = new javax.swing.JCheckBox();
         contractorPanel = new javax.swing.JPanel();
         contractorName = new javax.swing.JLabel();
@@ -113,16 +256,19 @@ public class GUI extends javax.swing.JFrame {
         contractorBankField = new javax.swing.JTextField();
         contractorAccountNumberField = new javax.swing.JTextField();
         contractorPhoneField = new javax.swing.JTextField();
-        contractorMialField = new javax.swing.JTextField();
+        contractorMailField = new javax.swing.JTextField();
         contractorWebField = new javax.swing.JTextField();
         contractorSignatureFile = new javax.swing.JLabel();
         contractorSignatureFileField = new javax.swing.JTextField();
-        contractorSave = new javax.swing.JToggleButton();
-        jLabel1 = new javax.swing.JLabel();
+        contractorSaveButton = new javax.swing.JButton();
         contractorNameNote = new javax.swing.JLabel();
         contractorBankNote = new javax.swing.JLabel();
         contractorAccountNumberNote = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        contractorSignatureBrowseButton = new javax.swing.JButton();
+        contractorResultFolder = new javax.swing.JLabel();
+        contractorResultFolderField = new javax.swing.JTextField();
+        contractorResultFolderBrowseButton = new javax.swing.JButton();
+        notification = new javax.swing.JLabel();
         menu = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         newInvoice = new javax.swing.JMenuItem();
@@ -134,30 +280,28 @@ public class GUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Fakturator");
-        setMaximumSize(new java.awt.Dimension(784, 620));
         setMinimumSize(new java.awt.Dimension(784, 620));
         setName("mainFrame"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(784, 620));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        welcomePanel.setMaximumSize(new java.awt.Dimension(780, 620));
-        welcomePanel.setMinimumSize(new java.awt.Dimension(780, 620));
-        welcomePanel.setPreferredSize(new java.awt.Dimension(780, 620));
+        welcomePanel.setMaximumSize(new java.awt.Dimension(780, 540));
+        welcomePanel.setMinimumSize(new java.awt.Dimension(780, 540));
+        welcomePanel.setPreferredSize(new java.awt.Dimension(780, 540));
         welcomePanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/akarienta/fakturator/img/logo.png"))); // NOI18N
-        welcomePanel.add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 200, -1, -1));
+        welcomePanel.add(logo, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 170, -1, -1));
 
         appName.setFont(new java.awt.Font("Berlin Sans FB Demi", 1, 48)); // NOI18N
         appName.setText("Fakturator");
-        welcomePanel.add(appName, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 250, -1, 47));
+        welcomePanel.add(appName, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 220, -1, 47));
 
-        getContentPane().add(welcomePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, 620));
+        getContentPane().add(welcomePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 780, 540));
 
-        newInvoicePanel.setMaximumSize(new java.awt.Dimension(780, 600));
-        newInvoicePanel.setMinimumSize(new java.awt.Dimension(780, 600));
-        newInvoicePanel.setPreferredSize(new java.awt.Dimension(780, 600));
+        newInvoicePanel.setMaximumSize(new java.awt.Dimension(780, 540));
+        newInvoicePanel.setMinimumSize(new java.awt.Dimension(780, 540));
+        newInvoicePanel.setPreferredSize(new java.awt.Dimension(780, 540));
 
         customer.setText("Odběratel");
 
@@ -244,8 +388,6 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        notification.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-
         userAsInvoiceNumber.setText("použít pro číslování");
 
         javax.swing.GroupLayout newInvoicePanelLayout = new javax.swing.GroupLayout(newInvoicePanel);
@@ -256,7 +398,6 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, newInvoicePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(newInvoicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(notification, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, newInvoicePanelLayout.createSequentialGroup()
                         .addGroup(newInvoicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dateOfIssue)
@@ -304,7 +445,7 @@ public class GUI extends javax.swing.JFrame {
                             .addComponent(deleteItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
             .addGroup(newInvoicePanelLayout.createSequentialGroup()
-                .addGap(234, 234, 234)
+                .addGap(238, 238, 238)
                 .addComponent(printInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -312,8 +453,6 @@ public class GUI extends javax.swing.JFrame {
             newInvoicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(newInvoicePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(notification)
-                .addGap(13, 13, 13)
                 .addGroup(newInvoicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(invoiceNumber)
                     .addComponent(invoiceNumberField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -346,52 +485,46 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(addItem)
                     .addComponent(deleteItem))
                 .addGap(18, 18, 18)
-                .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(printInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
         );
 
-        getContentPane().add(newInvoicePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, 600));
+        getContentPane().add(newInvoicePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 780, 540));
 
-        contractorPanel.setMaximumSize(new java.awt.Dimension(780, 600));
-        contractorPanel.setMinimumSize(new java.awt.Dimension(780, 600));
+        contractorPanel.setMaximumSize(new java.awt.Dimension(780, 540));
+        contractorPanel.setMinimumSize(new java.awt.Dimension(780, 540));
         contractorPanel.setPreferredSize(new java.awt.Dimension(780, 600));
 
-        contractorName.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         contractorName.setText("Jméno");
 
-        contractorAddress.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         contractorAddress.setText("Ulice a číslo popisné/orientační");
 
-        contractorCity.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         contractorCity.setText("Město");
 
-        contractorPostalCode.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         contractorPostalCode.setText("PSČ");
 
-        contractorIco.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         contractorIco.setText("IČ");
 
-        contractorBank.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         contractorBank.setText("Banka");
 
-        contractorAccountNumber.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         contractorAccountNumber.setText("Číslo účtu");
 
-        contractorPhone.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         contractorPhone.setText("Telefon");
 
-        contractorMail.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         contractorMail.setText("E-mail");
 
         contractorWeb.setText("Web");
 
         contractorSignatureFile.setText("Obrázek podpisu");
 
-        contractorSave.setText("Uložit údaje");
-
-        jLabel1.setText("* tučně vyznačené údaje je nutné vyplnit");
+        contractorSaveButton.setText("Uložit údaje");
+        contractorSaveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contractorSaveButtonActionPerformed(evt);
+            }
+        });
 
         contractorNameNote.setFont(new java.awt.Font("Cantarell", 2, 15)); // NOI18N
         contractorNameNote.setText("včetně příp. titulů a prostředního jména");
@@ -402,16 +535,31 @@ public class GUI extends javax.swing.JFrame {
         contractorAccountNumberNote.setFont(new java.awt.Font("Cantarell", 2, 15)); // NOI18N
         contractorAccountNumberNote.setText("včetně kódu banky");
 
-        jButton1.setText("Procházet...");
+        contractorSignatureBrowseButton.setText("Procházet...");
+        contractorSignatureBrowseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contractorSignatureBrowseButtonActionPerformed(evt);
+            }
+        });
+
+        contractorResultFolder.setText("Složka pro nové faktury");
+
+        contractorResultFolderBrowseButton.setText("Procházet...");
+        contractorResultFolderBrowseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contractorResultFolderBrowseButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout contractorPanelLayout = new javax.swing.GroupLayout(contractorPanel);
         contractorPanel.setLayout(contractorPanelLayout);
         contractorPanelLayout.setHorizontalGroup(
             contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(contractorPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(contractorPanelLayout.createSequentialGroup()
-                        .addGap(120, 120, 120)
+                        .addGap(46, 46, 46)
                         .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(contractorAccountNumber)
                             .addComponent(contractorBank)
@@ -420,50 +568,61 @@ public class GUI extends javax.swing.JFrame {
                             .addComponent(contractorPostalCode)
                             .addComponent(contractorIco)
                             .addComponent(contractorWeb)
-                            .addComponent(contractorSignatureFile))
+                            .addComponent(contractorSignatureFile)
+                            .addComponent(contractorResultFolder))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
                             .addGroup(contractorPanelLayout.createSequentialGroup()
                                 .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(contractorSignatureFileField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(contractorIcoField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(contractorBankField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(contractorAccountNumberField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(contractorPhoneField, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(contractorMialField, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(contractorMailField, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(contractorWebField, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(contractorPostalCodeField, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(contractorSave, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE))
+                                    .addComponent(contractorPostalCodeField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(contractorBankNote)
-                                    .addComponent(contractorAccountNumberNote)
-                                    .addComponent(jButton1)))))
-                    .addGroup(contractorPanelLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(contractorName)
-                            .addComponent(contractorAddress)
-                            .addComponent(contractorCity))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(contractorAddressField, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
-                                .addComponent(contractorCityField))
+                                    .addComponent(contractorAccountNumberNote))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(contractorPanelLayout.createSequentialGroup()
-                                .addComponent(contractorNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(contractorResultFolderField, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(contractorSignatureFileField)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, contractorPanelLayout.createSequentialGroup()
+                                        .addComponent(contractorSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(contractorSignatureBrowseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(contractorResultFolderBrowseButton)))))
+                    .addGroup(contractorPanelLayout.createSequentialGroup()
+                        .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(contractorPanelLayout.createSequentialGroup()
+                                .addComponent(contractorName)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(contractorNameNote)))))
-                .addContainerGap(18, Short.MAX_VALUE))
+                                .addComponent(contractorNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(contractorPanelLayout.createSequentialGroup()
+                                .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(contractorAddress)
+                                    .addComponent(contractorCity))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(contractorAddressField)
+                                    .addComponent(contractorCityField, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(contractorNameNote)
+                        .addGap(0, 24, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         contractorPanelLayout.setVerticalGroup(
             contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(contractorPanelLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addContainerGap()
                 .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(contractorName)
                     .addComponent(contractorNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(contractorName)
                     .addComponent(contractorNameNote))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -497,7 +656,7 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(contractorPhone))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(contractorMialField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(contractorMailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(contractorMail))
                 .addGap(10, 10, 10)
                 .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -507,15 +666,23 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(contractorSignatureFileField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(contractorSignatureFile)
-                    .addComponent(jButton1))
+                    .addComponent(contractorSignatureBrowseButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
-                .addGap(12, 12, 12)
-                .addComponent(contractorSave)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(contractorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(contractorResultFolderField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(contractorResultFolder)
+                    .addComponent(contractorResultFolderBrowseButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(contractorSaveButton)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        getContentPane().add(contractorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, 600));
+        getContentPane().add(contractorPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 780, 540));
+
+        notification.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        notification.setText("Místo pro notifikace");
+        getContentPane().add(notification, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
+        notification.getAccessibleContext().setAccessibleDescription("");
 
         file.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/akarienta/fakturator/img/house.png"))); // NOI18N
         file.setText("Soubor");
@@ -535,7 +702,7 @@ public class GUI extends javax.swing.JFrame {
         settings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/akarienta/fakturator/img/wrench-screwdriver.png"))); // NOI18N
         settings.setText("Nastavení");
 
-        contractor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.SHIFT_MASK));
+        contractor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
         contractor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/akarienta/fakturator/img/user-male.png"))); // NOI18N
         contractor.setText("Dodavatel");
         contractor.addActionListener(new java.awt.event.ActionListener() {
@@ -545,7 +712,7 @@ public class GUI extends javax.swing.JFrame {
         });
         settings.add(contractor);
 
-        customerEntry.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.SHIFT_MASK));
+        customerEntry.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         customerEntry.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/akarienta/fakturator/img/address-book-alt.png"))); // NOI18N
         customerEntry.setText("Odběratelé");
         settings.add(customerEntry);
@@ -568,15 +735,20 @@ public class GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void invoiceNumberFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceNumberFieldActionPerformed
-	// TODO
+        // TODO
     }//GEN-LAST:event_invoiceNumberFieldActionPerformed
 
     private void printInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printInvoiceActionPerformed
-	// TODO
+        // TODO
     }//GEN-LAST:event_printInvoiceActionPerformed
 
     private void newInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newInvoiceActionPerformed
         switchToPanel(newInvoicePanel);
+        printInvoice.setEnabled(true);
+        if (!isContractorOk()) {
+            printInvoice.setEnabled(false);
+            setError("Dodavatel není vypleň korektně a nelze tedy vystavovat faktury. Pro opravu zmáčkněte Ctrl+D.");
+        }
     }//GEN-LAST:event_newInvoiceActionPerformed
 
     private void addItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemActionPerformed
@@ -589,85 +761,184 @@ public class GUI extends javax.swing.JFrame {
 
     private void contractorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorActionPerformed
         switchToPanel(contractorPanel);
+        for(Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
+            String formFieldText = contractorField.getValue().getText();
+            Contractor field = contractorField.getKey();
+            
+            if (field.isMandatory()) {
+                warnIfIsEmpty(field.getLabel(), formFieldText);
+            }
+        }
     }//GEN-LAST:event_contractorActionPerformed
 
+    private void contractorSignatureBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorSignatureBrowseButtonActionPerformed
+        String origFilename = contractorSignatureFileField.getText();
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.addChoosableFileFilter(new FileNameExtensionFilter("Obrázek SVG", "svg"));
+        chooser.showOpenDialog(null);
+        File signatureFile = chooser.getSelectedFile();
+
+        if (signatureFile == null) {
+            contractorSignatureFileField.setText(origFilename);
+        } else {
+            contractorSignatureFileField.setText(signatureFile.getAbsolutePath());
+        }
+    }//GEN-LAST:event_contractorSignatureBrowseButtonActionPerformed
+
+    private void contractorResultFolderBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorResultFolderBrowseButtonActionPerformed
+        String origFilename = contractorResultFolderField.getText();
+        
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.addChoosableFileFilter(new FileNameExtensionFilter("Všechny složky", "*"));
+        
+        if (chooser.showOpenDialog(null) == JFileChooser.CANCEL_OPTION) {
+            contractorResultFolderField.setText(origFilename);
+        } else {
+            contractorResultFolderField.setText(chooser.getSelectedFile().getAbsolutePath());
+        }
+    }//GEN-LAST:event_contractorResultFolderBrowseButtonActionPerformed
+
+    private void contractorSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorSaveButtonActionPerformed
+        clearNotifications();
+        
+        for(Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
+            String formFieldText = contractorField.getValue().getText();
+            Contractor field = contractorField.getKey();
+            
+            if (field.isMandatory()) {
+                warnIfIsEmpty(field.getLabel(), formFieldText);
+            }
+            
+            if (Contractor.SIGNATURE_PATH.equals(field) && !isSvg(new File(formFieldText))) {
+                if(!formFieldText.isEmpty() || field.isMandatory()) {
+                    setError("Soubor s podpisem musí být SVG obrázek.");
+                    formFieldText = "";
+                    contractorField.getValue().setText("");    
+                }                
+            }
+            
+            if (Contractor.RESULT_FOLDER.equals(field) && !(new File(formFieldText)).isDirectory()) {
+                setError("Složka pro nové faktury musí být existující složka.");
+                formFieldText = "";
+                contractorField.getValue().setText("");
+            }
+            
+            try {
+                xmlWriter.changeNodeValue(field.getNodeName(), formFieldText);
+            } catch (ParserConfigurationException|SAXException|TransformerException|IOException ex) {
+                setError("Nastala vnitřní chyba programu - nepodařilo uložit pro dodavatele.");
+            }
+        }
+        
+        if (notification.getText().isEmpty()) {
+            setInfo("Informace o dodavateli byly v pořádku uloženy.");
+        }
+    }//GEN-LAST:event_contractorSaveButtonActionPerformed
+    
+    private boolean isSvg(File file) {
+            String ext = FilenameUtils.getExtension(file.getAbsolutePath());
+            return "svg".equals(ext) && file.isFile();
+    }
+    
     private void addItem() {
         String itemNameText = itemNameField.getText();
         String priceText = itemPriceField.getText();
-        if (isEmpty(itemName.getText(), itemNameText)) return;
-        if (isEmpty(itemPrice.getText(), priceText)) return;
-        
+        if (isEmpty(itemName.getText(), itemNameText)) {
+            return;
+        }
+        if (isEmpty(itemPrice.getText(), priceText)) {
+            return;
+        }
+
         Double price = stringToDouble(itemPrice.getText(), priceText);
-        if (price == null) return;
-        
+        if (price == null) {
+            return;
+        }
+
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        
+
         Object[] row = {this.rowId, itemNameText, price};
 
         model.addRow(row);
         table.setModel(model);
-        
+
         this.rowId++;
         clearNewInvoicePanel();
     }
-    
+
     private void removeItem() {
         String idText = itemIdField.getText();
-        if(isEmpty(itemId.getText(), idText)) return;
-        
+        if (isEmpty(itemId.getText(), idText)) {
+            return;
+        }
+
         Integer id = stringToInteger(itemId.getText(), idText);
-        if (id == null) return;
-        
+        if (id == null) {
+            return;
+        }
+
         DefaultTableModel model = (DefaultTableModel) table.getModel();
-        
+
         for (int i = 0; i < model.getRowCount(); i++) {
             if (model.getValueAt(i, 0) == id) {
                 model.removeRow(i);
                 clearNewInvoicePanel();
                 return;
-            } 
+            }
         }
         setError("Položka s ID " + id + " neexistuje.");
     }
-    
+
     private Double stringToDouble(String valueName, String value) {
         String czDecimalFormat = value.replace(",", ".");
         Double result = null;
         try {
-           result = Double.parseDouble(czDecimalFormat);
+            result = Double.parseDouble(czDecimalFormat);
         } catch (NumberFormatException ex) {
             setError("Hodnota '" + valueName + "' musí být desetinné číslo.");
         }
         return result;
     }
-    
+
     private Integer stringToInteger(String valueName, String value) {
         Integer result = null;
         try {
-           result = Integer.parseInt(value);
+            result = Integer.parseInt(value);
         } catch (NumberFormatException ex) {
             setError("Hodnota '" + valueName + "' musí být celé číslo.");
         }
         return result;
     }
-    
-    private void setError(String errorMsg) {
+
+    private void setError(String msg) {
         notification.setForeground(new java.awt.Color(205, 10, 0));
-        notification.setText("CHYBA: " + errorMsg);
+        notification.setText("CHYBA: " + msg);
     }
-    
-    private void setInfo(String errorMsg) {
+
+    private void setInfo(String msg) {
         notification.setForeground(new java.awt.Color(2, 159, 9));
-        notification.setText("INFO: " + errorMsg);
+        notification.setText("INFO: " + msg);
     }
     
-    private void clearNewInvoicePanel() {
+    private void setWarn(String msg) {
+        notification.setForeground(new java.awt.Color(255, 128, 0));
+        notification.setText("WARN: " + msg);
+    }
+    
+    private void clearNotifications() {
         notification.setText("");
+    }
+
+    private void clearNewInvoicePanel() {
         itemNameField.setText("");
         itemPriceField.setText("");
         itemIdField.setText("");
     }
-    
+
     private boolean isEmpty(String valueName, String value) {
         if ("".equals(value)) {
             setError("Hodnota '" + valueName + "' musí být vyplněna a není.");
@@ -677,6 +948,15 @@ public class GUI extends javax.swing.JFrame {
         }
     }
     
+        private boolean warnIfIsEmpty(String valueName, String value) {
+        if ("".equals(value)) {
+            setWarn("Hodnota '" + valueName + "' by měla být vyplněna.");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -734,7 +1014,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel contractorIco;
     private javax.swing.JTextField contractorIcoField;
     private javax.swing.JLabel contractorMail;
-    private javax.swing.JTextField contractorMialField;
+    private javax.swing.JTextField contractorMailField;
     private javax.swing.JLabel contractorName;
     private javax.swing.JTextField contractorNameField;
     private javax.swing.JLabel contractorNameNote;
@@ -743,7 +1023,11 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTextField contractorPhoneField;
     private javax.swing.JLabel contractorPostalCode;
     private javax.swing.JTextField contractorPostalCodeField;
-    private javax.swing.JToggleButton contractorSave;
+    private javax.swing.JLabel contractorResultFolder;
+    private javax.swing.JButton contractorResultFolderBrowseButton;
+    private javax.swing.JTextField contractorResultFolderField;
+    private javax.swing.JButton contractorSaveButton;
+    private javax.swing.JButton contractorSignatureBrowseButton;
     private javax.swing.JLabel contractorSignatureFile;
     private javax.swing.JTextField contractorSignatureFileField;
     private javax.swing.JLabel contractorWeb;
@@ -768,15 +1052,13 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTextField itemNameField;
     private javax.swing.JLabel itemPrice;
     private javax.swing.JTextField itemPriceField;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel logo;
     private javax.swing.JMenuBar menu;
     private javax.swing.JMenuItem newInvoice;
     private javax.swing.JPanel newInvoicePanel;
     private javax.swing.JLabel newItemHeadline;
     private javax.swing.JLabel notification;
-    private javax.swing.JToggleButton printInvoice;
+    private javax.swing.JButton printInvoice;
     private javax.swing.JMenu settings;
     private javax.swing.JTable table;
     private javax.swing.JScrollPane tablePanel;
