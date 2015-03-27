@@ -1,19 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.akarienta.fakturator;
 
 import cz.akarienta.fakturator.data.Contractor;
+import cz.akarienta.fakturator.data.Customer;
+import cz.akarienta.fakturator.data.Detail;
+import cz.akarienta.fakturator.xml.XMLConstants;
 import cz.akarienta.fakturator.xml.XMLReader;
 import cz.akarienta.fakturator.xml.XMLWriter;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -25,33 +25,46 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.commons.io.FilenameUtils;
+import org.javatuples.Pair;
 import org.xml.sax.SAXException;
 
 /**
+ * Fakturator GUI.
  *
  * @author akarienta
  */
 public class GUI extends javax.swing.JFrame {
     
-    private static final String CONTRACTOR_DATA = "src/cz/akarienta/fakturator/data/contractor.xml";
-    private static final String CONTRACTOR_BASE_XPATH_Q = "/contractor/";
+    // TODO
+    // promazavani souboru invoice.xml
+    // hlaska pro uzivatele - uspesne vygenerovana faktura
+    // ukladani cisla posledni faktury
+    // help - obrazovka o programu
+    // validace datumu atd.
+    // otestovat :-)
+    // distribuce v jar
+    // instalace na Windows?
+    // hodit na GitHub
 
     private final List<JPanel> panels = new ArrayList<JPanel>();
-    private static final List<String> customers = new ArrayList<String>();
-    static {
-        customers.add("Test1");
-        customers.add("Test2");
-    }
     private final Map<Contractor, JTextField> contractorFields = new EnumMap<Contractor, JTextField>(Contractor.class);
     private final Map<Contractor, JLabel> contractorLabels = new EnumMap<Contractor, JLabel>(Contractor.class);
+    private final Map<Customer, JTextField> customerFields = new EnumMap<Customer, JTextField>(Customer.class);
+    private final Map<Customer, JLabel> customerLabels = new EnumMap<Customer, JLabel>(Customer.class);
+    private final Map<Detail, JTextField> detailFields = new EnumMap<Detail, JTextField>(Detail.class);
+    private final Map<Detail, JLabel> detailLabels = new EnumMap<Detail, JLabel>(Detail.class);
 
     private int rowId;
-    
-    private final XMLReader xmlReader = new XMLReader(CONTRACTOR_DATA);
-    private final XMLWriter xmlWriter = new XMLWriter(CONTRACTOR_DATA);
+
+    private final XMLReader contractorReader = new XMLReader(XMLConstants.CONTRACTOR_DATA);
+    private final XMLWriter contractorWriter = new XMLWriter(XMLConstants.CONTRACTOR_DATA);
+    private final XMLReader customersReader = new XMLReader(XMLConstants.CUSTOMERS_DATA);
+    private final XMLWriter customersWriter = new XMLWriter(XMLConstants.CUSTOMERS_DATA);
 
     /**
      * Creates new form gui
@@ -61,13 +74,20 @@ public class GUI extends javax.swing.JFrame {
         localizeFileChooser();
         buildPanels();
         buildContractor();
-        initContractorFieldNames();
+        buildCustomer();
+        buildDetails();
         switchToPanel(welcomePanel);
-        customerList.setModel(new DefaultComboBoxModel());
-        for (String customer : customers) {
-            customerList.addItem(customer);
+    }
+
+    private void loadCustomers() {
+        customerList.removeAllItems();        
+        try {
+            for (String customer : this.customersReader.getCustomers()) {
+                customerList.addItem(customer);
+            }
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
+            setError("Nastala vnitřní chyba programu - nepodařilo se odběratele.");
         }
-        loadContractor();
     }
 
     private void localizeFileChooser() {
@@ -101,13 +121,16 @@ public class GUI extends javax.swing.JFrame {
         panels.add(welcomePanel);
         panels.add(newInvoicePanel);
         panels.add(contractorPanel);
+        panels.add(customerPanel);
     }
-    
+
     private void buildContractor() {
         buildContractorFields();
         buildContractorLabels();
+        initContractorFieldNames();
+        loadContractor();
     }
-    
+
     private void buildContractorFields() {
         contractorFields.put(Contractor.NAME, contractorNameField);
         contractorFields.put(Contractor.ADDRESS, contractorAddressField);
@@ -137,36 +160,82 @@ public class GUI extends javax.swing.JFrame {
         contractorLabels.put(Contractor.SIGNATURE_PATH, contractorSignatureFile);
         contractorLabels.put(Contractor.RESULT_FOLDER, contractorResultFolder);
     }
-    
-    private boolean isContractorOk() {
-        for(Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
-            Contractor field = contractorField.getKey();
-            
-            try {
-                String formFieldText = this.xmlReader.getElementContentText(CONTRACTOR_BASE_XPATH_Q + field.getNodeName());
-                if(field.isMandatory() && formFieldText.isEmpty()) {
-                    return false;
-                }
-            } catch (ParserConfigurationException|SAXException|XPathExpressionException|IOException ex) {
-                setError("Nastala vnitřní chyba programu - nepodařilo se načíst uložená data pro dodavatele.");
-                return false;
-            }
-        }
-        
-        return true;
+
+    private void buildCustomer() {
+        buildCustomerFields();
+        buildCustomerLabels();
+        initCustomerFieldNames();
+        loadCustomers();
+    }
+
+    private void buildCustomerFields() {
+        customerFields.put(Customer.NAME, customerNameField);
+        customerFields.put(Customer.ADDRESS, customerAddressField);
+        customerFields.put(Customer.CITY, customerCityField);
+        customerFields.put(Customer.POSTAL_CODE, customerPostalCodeField);
+        customerFields.put(Customer.ICO, customerIcoField);
+        customerFields.put(Customer.DIC, customerDicField);
+    }
+
+    private void buildCustomerLabels() {
+        customerLabels.put(Customer.NAME, customerName);
+        customerLabels.put(Customer.ADDRESS, customerAddress);
+        customerLabels.put(Customer.CITY, customerCity);
+        customerLabels.put(Customer.POSTAL_CODE, customerPostalCode);
+        customerLabels.put(Customer.ICO, customerIco);
+        customerLabels.put(Customer.DIC, customerDic);
     }
     
-    private void initContractorFieldNames() {      
-        for(Map.Entry<Contractor, JLabel> contractorField : this.contractorLabels.entrySet()) {
+    private void buildDetails() {
+        buildDetailsFields();
+        buildDetailsLabels();
+        initDetailsFieldNames();
+    }
+    
+    private void buildDetailsFields() {
+        detailFields.put(Detail.ISSUE_DATE, dateOfIssueField);
+        detailFields.put(Detail.PAYMENT_DUE, dateOfValidityField);
+        detailFields.put(Detail.INVOICE_NUMBER, invoiceNumberField);
+    }
+
+    private void buildDetailsLabels() {
+        detailLabels.put(Detail.ISSUE_DATE, dateOfIssue);
+        detailLabels.put(Detail.PAYMENT_DUE, dateOfValidity);
+        detailLabels.put(Detail.INVOICE_NUMBER, invoiceNumber);
+    }
+
+    private void initContractorFieldNames() {
+        for (Map.Entry<Contractor, JLabel> contractorField : this.contractorLabels.entrySet()) {
             JLabel formLabel = contractorField.getValue();
             Contractor field = contractorField.getKey();
 
             formLabel.setText(field.getLabel());
-            if(field.isMandatory()) {
-                formLabel.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+            if (field.isMandatory()) {
+                setFieldAsMandatory(formLabel);
             }
         }
+    }
 
+    private void initCustomerFieldNames() {
+        for (Map.Entry<Customer, JLabel> customerField : this.customerLabels.entrySet()) {
+            JLabel formLabel = customerField.getValue();
+            Customer field = customerField.getKey();
+
+            formLabel.setText(field.getLabel());
+        }
+    }
+    
+    private void initDetailsFieldNames() {
+        for (Map.Entry<Detail, JLabel> detailField : this.detailLabels.entrySet()) {
+            JLabel formLabel = detailField.getValue();
+            Detail field = detailField.getKey();
+
+            formLabel.setText(field.getLabel());
+        }
+    }
+
+    private void setFieldAsMandatory(JLabel formLabel) {
+        formLabel.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
     }
 
     private void hideAllPanels() {
@@ -174,9 +243,9 @@ public class GUI extends javax.swing.JFrame {
             panel.setVisible(false);
         }
     }
-    
+
     private void clearAllPanels() {
-        clearNewInvoicePanel();        
+        clearNewInvoicePanel();
     }
 
     private void switchToPanel(JPanel panel) {
@@ -185,20 +254,36 @@ public class GUI extends javax.swing.JFrame {
         clearNotifications();
         panel.setVisible(true);
     }
-    
+
     private void loadContractor() {
-        try {          
-            XMLReader xmlReader = new XMLReader(CONTRACTOR_DATA);
-            
-            for(Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
+        try {
+            for (Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
                 JTextField formField = contractorField.getValue();
                 String nodeName = contractorField.getKey().getNodeName();
-                
-                formField.setText(xmlReader.getElementContentText(CONTRACTOR_BASE_XPATH_Q + nodeName));
+
+                formField.setText(this.contractorReader.getElementContentText(XMLConstants.CONTRACTOR_DATA_XPATH + "/" + nodeName));
             }
-        } catch (ParserConfigurationException|SAXException|XPathExpressionException|IOException ex) {
+        } catch (ParserConfigurationException | SAXException | XPathExpressionException | IOException ex) {
             setError("Nastala vnitřní chyba programu - nepodařilo se načíst uložená data pro dodavatele.");
         }
+    }
+
+    private boolean isContractorOk() {
+        for (Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
+            Contractor field = contractorField.getKey();
+
+            try {
+                String formFieldText = this.contractorReader.getElementContentText(XMLConstants.CONTRACTOR_DATA_XPATH + "/" + field.getNodeName());
+                if (field.isMandatory() && formFieldText.isEmpty()) {
+                    return false;
+                }
+            } catch (ParserConfigurationException | SAXException | XPathExpressionException | IOException ex) {
+                setError("Nastala vnitřní chyba programu - nepodařilo se načíst uložená data pro dodavatele.");
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -221,7 +306,7 @@ public class GUI extends javax.swing.JFrame {
         dateOfIssue = new javax.swing.JLabel();
         dateOfValidity = new javax.swing.JLabel();
         dateOfIssueField = new javax.swing.JTextField();
-        dateOfValidtyField = new javax.swing.JTextField();
+        dateOfValidityField = new javax.swing.JTextField();
         newItemHeadline = new javax.swing.JLabel();
         itemName = new javax.swing.JLabel();
         itemPrice = new javax.swing.JLabel();
@@ -269,6 +354,27 @@ public class GUI extends javax.swing.JFrame {
         contractorResultFolderField = new javax.swing.JTextField();
         contractorResultFolderBrowseButton = new javax.swing.JButton();
         notification = new javax.swing.JLabel();
+        customerPanel = new javax.swing.JPanel();
+        newCustomer = new javax.swing.JLabel();
+        deleteCustomer = new javax.swing.JLabel();
+        customerToDeletionList = new javax.swing.JComboBox();
+        deleteCustomerButton = new javax.swing.JButton();
+        customerName = new javax.swing.JLabel();
+        customerAddress = new javax.swing.JLabel();
+        customerCity = new javax.swing.JLabel();
+        customerPostalCode = new javax.swing.JLabel();
+        customerIco = new javax.swing.JLabel();
+        customerDic = new javax.swing.JLabel();
+        customerNameField = new javax.swing.JTextField();
+        customerAddressField = new javax.swing.JTextField();
+        customerCityField = new javax.swing.JTextField();
+        customerPostalCodeField = new javax.swing.JTextField();
+        customerIcoField = new javax.swing.JTextField();
+        customerDicField = new javax.swing.JTextField();
+        addCustomerButton = new javax.swing.JButton();
+        customerSaveAsField = new javax.swing.JTextField();
+        customerSaveAs = new javax.swing.JLabel();
+        customerSaveAsTip = new javax.swing.JLabel();
         menu = new javax.swing.JMenuBar();
         file = new javax.swing.JMenu();
         newInvoice = new javax.swing.JMenuItem();
@@ -309,12 +415,6 @@ public class GUI extends javax.swing.JFrame {
 
         customerList.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        invoiceNumberField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                invoiceNumberFieldActionPerformed(evt);
-            }
-        });
-
         dateOfIssue.setText("Datum vystavení");
 
         dateOfValidity.setText("Datum splatnosti");
@@ -335,7 +435,7 @@ public class GUI extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 false, true, true
@@ -414,7 +514,7 @@ public class GUI extends javax.swing.JFrame {
                             .addGroup(newInvoicePanelLayout.createSequentialGroup()
                                 .addComponent(dateOfValidity)
                                 .addGap(18, 18, 18)
-                                .addComponent(dateOfValidtyField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(dateOfValidityField, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(newInvoicePanelLayout.createSequentialGroup()
                                 .addComponent(customer)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -462,7 +562,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGap(9, 9, 9)
                 .addGroup(newInvoicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(newInvoicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(dateOfValidtyField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(dateOfValidityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(dateOfValidity))
                     .addGroup(newInvoicePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(dateOfIssueField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -684,6 +784,130 @@ public class GUI extends javax.swing.JFrame {
         getContentPane().add(notification, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
         notification.getAccessibleContext().setAccessibleDescription("");
 
+        customerPanel.setMaximumSize(new java.awt.Dimension(780, 540));
+        customerPanel.setMinimumSize(new java.awt.Dimension(780, 540));
+        customerPanel.setPreferredSize(new java.awt.Dimension(780, 600));
+
+        newCustomer.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        newCustomer.setText("Nový odběratel");
+
+        deleteCustomer.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        deleteCustomer.setText("Smazat odběratele");
+
+        customerToDeletionList.setModel(customerList.getModel());
+
+        deleteCustomerButton.setText("Smazat odběratele");
+        deleteCustomerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteCustomerButtonActionPerformed(evt);
+            }
+        });
+
+        customerName.setText("Jméno");
+
+        customerAddress.setText("Ulice a číslo popisné/orientační");
+
+        customerCity.setText("Město");
+
+        customerPostalCode.setText("PSČ");
+
+        customerIco.setText("IČ");
+
+        customerDic.setText("DIČ");
+
+        addCustomerButton.setText("Přidat odběratele");
+        addCustomerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addCustomerButtonActionPerformed(evt);
+            }
+        });
+
+        customerSaveAs.setText("Uložit jako");
+
+        customerSaveAsTip.setFont(new java.awt.Font("Cantarell", 2, 15)); // NOI18N
+        customerSaveAsTip.setText("název musí být jedinečný");
+
+        javax.swing.GroupLayout customerPanelLayout = new javax.swing.GroupLayout(customerPanel);
+        customerPanel.setLayout(customerPanelLayout);
+        customerPanelLayout.setHorizontalGroup(
+            customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(customerPanelLayout.createSequentialGroup()
+                .addGap(68, 68, 68)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(customerName)
+                            .addComponent(customerAddress))
+                        .addComponent(customerCity, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(customerPostalCode, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(customerIco, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(customerDic, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(customerSaveAs))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(customerSaveAsField)
+                    .addComponent(addCustomerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
+                    .addComponent(customerDicField)
+                    .addComponent(customerIcoField)
+                    .addComponent(customerPostalCodeField)
+                    .addComponent(customerAddressField)
+                    .addComponent(customerNameField)
+                    .addComponent(customerCityField)
+                    .addComponent(newCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deleteCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(customerToDeletionList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deleteCustomerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(customerSaveAsTip)
+                .addContainerGap(82, Short.MAX_VALUE))
+        );
+        customerPanelLayout.setVerticalGroup(
+            customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(customerPanelLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(newCustomer)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(customerNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(customerName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(customerAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(customerAddress))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(customerCityField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(customerCity))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(customerPostalCodeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(customerPostalCode))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(customerIcoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(customerIco))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(customerDicField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(customerDic))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(customerSaveAsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(customerSaveAs)
+                    .addComponent(customerSaveAsTip))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(addCustomerButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(deleteCustomer)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(customerToDeletionList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(deleteCustomerButton)
+                .addGap(25, 25, 25))
+        );
+
+        getContentPane().add(customerPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 780, 540));
+
         file.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/akarienta/fakturator/img/house.png"))); // NOI18N
         file.setText("Soubor");
 
@@ -715,6 +939,11 @@ public class GUI extends javax.swing.JFrame {
         customerEntry.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         customerEntry.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/akarienta/fakturator/img/address-book-alt.png"))); // NOI18N
         customerEntry.setText("Odběratelé");
+        customerEntry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customerEntryActionPerformed(evt);
+            }
+        });
         settings.add(customerEntry);
 
         menu.add(settings);
@@ -734,20 +963,16 @@ public class GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void invoiceNumberFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_invoiceNumberFieldActionPerformed
-        // TODO
-    }//GEN-LAST:event_invoiceNumberFieldActionPerformed
-
-    private void printInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printInvoiceActionPerformed
-        // TODO
-    }//GEN-LAST:event_printInvoiceActionPerformed
-
     private void newInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newInvoiceActionPerformed
         switchToPanel(newInvoicePanel);
         printInvoice.setEnabled(true);
         if (!isContractorOk()) {
             printInvoice.setEnabled(false);
             setError("Dodavatel není vypleň korektně a nelze tedy vystavovat faktury. Pro opravu zmáčkněte Ctrl+D.");
+        }
+        if (customerList.getItemCount() == 0) {
+            printInvoice.setEnabled(false);
+            setError("Neexistuje žádný odběratel a nelze tedy vystavovat faktury. Pro opravu zmáčkněte Ctrl+O.");
         }
     }//GEN-LAST:event_newInvoiceActionPerformed
 
@@ -761,10 +986,10 @@ public class GUI extends javax.swing.JFrame {
 
     private void contractorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorActionPerformed
         switchToPanel(contractorPanel);
-        for(Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
+        for (Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
             String formFieldText = contractorField.getValue().getText();
             Contractor field = contractorField.getKey();
-            
+
             if (field.isMandatory()) {
                 warnIfIsEmpty(field.getLabel(), formFieldText);
             }
@@ -789,12 +1014,12 @@ public class GUI extends javax.swing.JFrame {
 
     private void contractorResultFolderBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorResultFolderBrowseButtonActionPerformed
         String origFilename = contractorResultFolderField.getText();
-        
+
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.addChoosableFileFilter(new FileNameExtensionFilter("Všechny složky", "*"));
-        
+
         if (chooser.showOpenDialog(null) == JFileChooser.CANCEL_OPTION) {
             contractorResultFolderField.setText(origFilename);
         } else {
@@ -804,47 +1029,150 @@ public class GUI extends javax.swing.JFrame {
 
     private void contractorSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorSaveButtonActionPerformed
         clearNotifications();
-        
-        for(Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
+
+        for (Map.Entry<Contractor, JTextField> contractorField : this.contractorFields.entrySet()) {
             String formFieldText = contractorField.getValue().getText();
             Contractor field = contractorField.getKey();
-            
+
             if (field.isMandatory()) {
                 warnIfIsEmpty(field.getLabel(), formFieldText);
             }
-            
+
             if (Contractor.SIGNATURE_PATH.equals(field) && !isSvg(new File(formFieldText))) {
-                if(!formFieldText.isEmpty() || field.isMandatory()) {
+                if (!formFieldText.isEmpty() || field.isMandatory()) {
                     setError("Soubor s podpisem musí být SVG obrázek.");
                     formFieldText = "";
-                    contractorField.getValue().setText("");    
-                }                
+                    contractorField.getValue().setText("");
+                }
             }
-            
+
             if (Contractor.RESULT_FOLDER.equals(field) && !(new File(formFieldText)).isDirectory()) {
                 setError("Složka pro nové faktury musí být existující složka.");
                 formFieldText = "";
                 contractorField.getValue().setText("");
             }
-            
+
             try {
-                xmlWriter.changeNodeValue(field.getNodeName(), formFieldText);
-            } catch (ParserConfigurationException|SAXException|TransformerException|IOException ex) {
-                setError("Nastala vnitřní chyba programu - nepodařilo uložit pro dodavatele.");
+                contractorWriter.changeNodeValue(field.getNodeName(), formFieldText);
+            } catch (ParserConfigurationException | SAXException | TransformerException | IOException ex) {
+                setError("Nastala vnitřní chyba programu - nepodařilo se uložit pro dodavatele.");
             }
         }
-        
+
         if (notification.getText().isEmpty()) {
             setInfo("Informace o dodavateli byly v pořádku uloženy.");
         }
     }//GEN-LAST:event_contractorSaveButtonActionPerformed
-    
-    private boolean isSvg(File file) {
-            String ext = FilenameUtils.getExtension(file.getAbsolutePath());
-            return "svg".equals(ext) && file.isFile();
+
+    private void customerEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerEntryActionPerformed
+        switchToPanel(customerPanel);
+    }//GEN-LAST:event_customerEntryActionPerformed
+
+    private void addCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerButtonActionPerformed
+        Map<String, String> nodes = new TreeMap<String, String>();
+        String newCustomerName = customerSaveAsField.getText();
+
+        if (isEmpty(customerSaveAs.getText(), newCustomerName)) {
+            return;
+        }
+
+        for (int i = 0; i < customerList.getItemCount(); i++) {
+            String customerName = customerList.getItemAt(i).toString();
+            if (newCustomerName.equals(customerName)) {
+                setError("Odběratel s názvem '" + customerName + "' již existuje.");
+                return;
+            }
+        }
+
+        for (Map.Entry<Customer, JTextField> customerField : this.customerFields.entrySet()) {
+            Customer field = customerField.getKey();
+            String formFieldText = customerField.getValue().getText();
+            String formFieldLabel = this.customerLabels.get(field).getText();
+
+            if (isEmpty(formFieldLabel, formFieldText)) {
+                return;
+            }
+
+            nodes.put(field.getNodeName(), formFieldText);
+        }
+
+        try {
+            this.customersWriter.addCustomer(newCustomerName, nodes);
+        } catch (ParserConfigurationException | SAXException | TransformerException | IOException ex) {
+            setError("Nastala vnitřní chyba programu - nepodařilo se uložit nového odběratele.");
+            return;
+        }
+
+        clearCustomer();
+        loadCustomers();
+        setInfo("Odběratel '" + newCustomerName + "' byl v pořádku přidán.");
+    }//GEN-LAST:event_addCustomerButtonActionPerformed
+
+    private void deleteCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerButtonActionPerformed
+        String customerName = customerList.getSelectedItem().toString();
+        
+        try {
+            this.customersWriter.removeCustomer(customerName);
+        } catch (ParserConfigurationException|SAXException|IOException|XPathExpressionException|TransformerException ex) {
+            setError("Nastala vnitřní chyba programu - nepodařilo se smazat odběratele '" + customerName + "'.");
+            System.err.print(ex);
+            return;
+        }
+        
+        loadCustomers();
+        setInfo("Odběratel '" + customerName  + "' byl v pořádku odebrán.");
+    }//GEN-LAST:event_deleteCustomerButtonActionPerformed
+
+    private void printInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printInvoiceActionPerformed
+        Map<String, String> details = new TreeMap<String, String>();
+        List<Pair<String, BigDecimal>> items = new ArrayList<Pair<String, BigDecimal>>();
+        
+        for (Map.Entry<Detail, JTextField> detailField : this.detailFields.entrySet()) {
+            String detailFieldText = detailField.getValue().getText();
+            Detail field = detailField.getKey();
+            if(isEmpty(detailLabels.get(field).getText(), detailFieldText)) {
+                return;
+            }
+            details.put(field.getNodeName(), detailFieldText);
+        }
+        
+        if(table.getModel().getRowCount() == 0) {
+            setError("Faktura musí obsahovat alespoň jednu položku.");
+        }
+        
+        for(int i = 0; i < table.getModel().getRowCount(); i++) {
+            String itemName = (String) table.getModel().getValueAt(i, 1);
+            BigDecimal itemPrice = (BigDecimal) table.getModel().getValueAt(i, 2);
+            items.add(new Pair(itemName, itemPrice));
+        }
+        
+        try {
+            InvoiceFactory iFac = new InvoiceFactory(customerList.getSelectedItem().toString(), details, items);
+            iFac.renderInvoiceXml();
+            InvoiceCreator iCre = new InvoiceCreator();
+            iCre.createInvoice();
+        } catch (ParserConfigurationException|SAXException|XPathExpressionException|IOException|TransformerException|ConfigurationException ex) {
+            setError("Nastala vnitřní chyba programu - nepodařilo se vygenerovat fakturu.");
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_printInvoiceActionPerformed
+
+    private void clearCustomer() {
+        for (Map.Entry<Customer, JTextField> customerField : this.customerFields.entrySet()) {
+            JTextField formField = customerField.getValue();
+            formField.setText("");
+        }
+        customerSaveAsField.setText("");
     }
-    
+
+    private boolean isSvg(File file) {
+        String ext = FilenameUtils.getExtension(file.getAbsolutePath());
+        return "svg".equals(ext) && file.isFile();
+    }
+
     private void addItem() {
+        clearNotifications();
+        
         String itemNameText = itemNameField.getText();
         String priceText = itemPriceField.getText();
         if (isEmpty(itemName.getText(), itemNameText)) {
@@ -854,7 +1182,7 @@ public class GUI extends javax.swing.JFrame {
             return;
         }
 
-        Double price = stringToDouble(itemPrice.getText(), priceText);
+        BigDecimal price = stringToBigDecimal(itemPrice.getText(), priceText);
         if (price == null) {
             return;
         }
@@ -893,11 +1221,11 @@ public class GUI extends javax.swing.JFrame {
         setError("Položka s ID " + id + " neexistuje.");
     }
 
-    private Double stringToDouble(String valueName, String value) {
+    private BigDecimal stringToBigDecimal(String valueName, String value) {
         String czDecimalFormat = value.replace(",", ".");
-        Double result = null;
+        BigDecimal result = null;
         try {
-            result = Double.parseDouble(czDecimalFormat);
+            result = new BigDecimal(czDecimalFormat);
         } catch (NumberFormatException ex) {
             setError("Hodnota '" + valueName + "' musí být desetinné číslo.");
         }
@@ -921,14 +1249,14 @@ public class GUI extends javax.swing.JFrame {
 
     private void setInfo(String msg) {
         notification.setForeground(new java.awt.Color(2, 159, 9));
-        notification.setText("INFO: " + msg);
+        notification.setText("INFORMACE: " + msg);
     }
-    
+
     private void setWarn(String msg) {
         notification.setForeground(new java.awt.Color(255, 128, 0));
-        notification.setText("WARN: " + msg);
+        notification.setText("VAROVÁNÍ: " + msg);
     }
-    
+
     private void clearNotifications() {
         notification.setText("");
     }
@@ -947,8 +1275,8 @@ public class GUI extends javax.swing.JFrame {
             return false;
         }
     }
-    
-        private boolean warnIfIsEmpty(String valueName, String value) {
+
+    private boolean warnIfIsEmpty(String valueName, String value) {
         if ("".equals(value)) {
             setWarn("Hodnota '" + valueName + "' by měla být vyplněna.");
             return true;
@@ -998,6 +1326,7 @@ public class GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem about;
+    private javax.swing.JButton addCustomerButton;
     private javax.swing.JButton addItem;
     private javax.swing.JLabel appName;
     private javax.swing.JMenuItem contractor;
@@ -1034,12 +1363,31 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTextField contractorWebField;
     private javax.swing.JLabel currency;
     private javax.swing.JLabel customer;
+    private javax.swing.JLabel customerAddress;
+    private javax.swing.JTextField customerAddressField;
+    private javax.swing.JLabel customerCity;
+    private javax.swing.JTextField customerCityField;
+    private javax.swing.JLabel customerDic;
+    private javax.swing.JTextField customerDicField;
     private javax.swing.JMenuItem customerEntry;
+    private javax.swing.JLabel customerIco;
+    private javax.swing.JTextField customerIcoField;
     private javax.swing.JComboBox customerList;
+    private javax.swing.JLabel customerName;
+    private javax.swing.JTextField customerNameField;
+    private javax.swing.JPanel customerPanel;
+    private javax.swing.JLabel customerPostalCode;
+    private javax.swing.JTextField customerPostalCodeField;
+    private javax.swing.JLabel customerSaveAs;
+    private javax.swing.JTextField customerSaveAsField;
+    private javax.swing.JLabel customerSaveAsTip;
+    private javax.swing.JComboBox customerToDeletionList;
     private javax.swing.JLabel dateOfIssue;
     private javax.swing.JTextField dateOfIssueField;
     private javax.swing.JLabel dateOfValidity;
-    private javax.swing.JTextField dateOfValidtyField;
+    private javax.swing.JTextField dateOfValidityField;
+    private javax.swing.JLabel deleteCustomer;
+    private javax.swing.JButton deleteCustomerButton;
     private javax.swing.JButton deleteItem;
     private javax.swing.JLabel deleteItemHeadline;
     private javax.swing.JMenu file;
@@ -1054,6 +1402,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JTextField itemPriceField;
     private javax.swing.JLabel logo;
     private javax.swing.JMenuBar menu;
+    private javax.swing.JLabel newCustomer;
     private javax.swing.JMenuItem newInvoice;
     private javax.swing.JPanel newInvoicePanel;
     private javax.swing.JLabel newItemHeadline;

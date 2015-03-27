@@ -60,6 +60,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Odb&#x11b;ratel&#xe9;"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="customerEntryActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -211,7 +214,7 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="dateOfValidity" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="dateOfValidtyField" min="-2" pref="225" max="-2" attributes="0"/>
+                                  <Component id="dateOfValidityField" min="-2" pref="225" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="customer" min="-2" max="-2" attributes="0"/>
@@ -276,7 +279,7 @@
                   <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="dateOfValidtyField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="dateOfValidityField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="dateOfValidity" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
@@ -335,9 +338,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="invoiceNumberField">
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="invoiceNumberFieldActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="dateOfIssue">
           <Properties>
@@ -351,7 +351,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="dateOfIssueField">
         </Component>
-        <Component class="javax.swing.JTextField" name="dateOfValidtyField">
+        <Component class="javax.swing.JTextField" name="dateOfValidityField">
         </Component>
         <Component class="javax.swing.JLabel" name="newItemHeadline">
           <Properties>
@@ -388,7 +388,7 @@
                   <Table columnCount="3" rowCount="0">
                     <Column editable="false" title="ID" type="java.lang.Integer"/>
                     <Column editable="true" title="N&#xe1;zev" type="java.lang.String"/>
-                    <Column editable="true" title="Cena (K&#x10d;)" type="java.lang.Double"/>
+                    <Column editable="true" title="Cena (K&#x10d;)" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -798,5 +798,215 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Container class="javax.swing.JPanel" name="customerPanel">
+      <Properties>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 540]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 540]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[780, 600]"/>
+        </Property>
+      </Properties>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="0" y="30" width="780" height="540"/>
+        </Constraint>
+      </Constraints>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                              <Component id="customerName" min="-2" max="-2" attributes="0"/>
+                              <Component id="customerAddress" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="customerCity" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="customerPostalCode" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="customerIco" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="customerDic" alignment="1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="customerSaveAs" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="customerSaveAsField" max="32767" attributes="0"/>
+                      <Component id="addCustomerButton" pref="244" max="32767" attributes="0"/>
+                      <Component id="customerDicField" max="32767" attributes="0"/>
+                      <Component id="customerIcoField" max="32767" attributes="0"/>
+                      <Component id="customerPostalCodeField" max="32767" attributes="0"/>
+                      <Component id="customerAddressField" max="32767" attributes="0"/>
+                      <Component id="customerNameField" max="32767" attributes="0"/>
+                      <Component id="customerCityField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="newCustomer" alignment="0" max="32767" attributes="0"/>
+                      <Component id="deleteCustomer" alignment="0" max="32767" attributes="0"/>
+                      <Component id="customerToDeletionList" alignment="0" max="32767" attributes="0"/>
+                      <Component id="deleteCustomerButton" alignment="0" min="-2" pref="242" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="customerSaveAsTip" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="82" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                  <Component id="newCustomer" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="customerNameField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="customerAddressField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerAddress" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="customerCityField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerCity" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="customerPostalCodeField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerPostalCode" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="customerIcoField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerIco" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="customerDicField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerDic" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="customerSaveAsField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerSaveAs" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerSaveAsTip" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="addCustomerButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="deleteCustomer" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="customerToDeletionList" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="deleteCustomerButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="newCustomer">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Nov&#xfd; odb&#x11b;ratel"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="deleteCustomer">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Smazat odb&#x11b;ratele"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="customerToDeletionList">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection component="customerList" name="model" type="property"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="deleteCustomerButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Smazat odb&#x11b;ratele"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteCustomerButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="customerName">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Jm&#xe9;no"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="customerAddress">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Ulice a &#x10d;&#xed;slo popisn&#xe9;/orienta&#x10d;n&#xed;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="customerCity">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="M&#x11b;sto"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="customerPostalCode">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="PS&#x10c;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="customerIco">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="I&#x10c;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="customerDic">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="DI&#x10c;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="customerNameField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="customerAddressField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="customerCityField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="customerPostalCodeField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="customerIcoField">
+        </Component>
+        <Component class="javax.swing.JTextField" name="customerDicField">
+        </Component>
+        <Component class="javax.swing.JButton" name="addCustomerButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="P&#x159;idat odb&#x11b;ratele"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addCustomerButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="customerSaveAsField">
+        </Component>
+        <Component class="javax.swing.JLabel" name="customerSaveAs">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Ulo&#x17e;it jako"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="customerSaveAsTip">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="2"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="n&#xe1;zev mus&#xed; b&#xfd;t jedine&#x10d;n&#xfd;"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

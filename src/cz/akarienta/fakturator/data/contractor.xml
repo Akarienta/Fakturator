@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?><contractor>
+<?xml version="1.0" encoding="UTF-8"?>
+<contractor>
     <name>Ivana Doležalová</name>       
     <address>U Uhříněveské obory 6</address>
     <city>Praha 22</city>
     <postalCode>104 00</postalCode>
-    <ico>111</ico>
-    <bank>AirBank</bank>
-    <accountNumber>111/222</accountNumber>
+    <ico>03798003</ico>
+    <bank>Air Bank a.s.</bank>
+    <accountNumber>1085819035/3030</accountNumber>
     <phone>+420 776 636 086</phone>
     <mail>ivana.dolezalova@gmail.com</mail>
     <web/>
-    <signaturePath/>
+    <signaturePath>/home/akarienta/Plocha/podpis1.svg</signaturePath>
     <resultFolder>/home/akarienta/Plocha</resultFolder>
 </contractor>

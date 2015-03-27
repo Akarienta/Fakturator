@@ -5,30 +5,23 @@
  */
 package cz.akarienta.fakturator.data;
 
+import cz.akarienta.fakturator.xml.XMLConstants;
+
 /**
- * Contractor data.
+ * Detail data.
  * 
  * @author akarienta
  */
-public enum Contractor {
-    NAME("name", "Jméno", true),    
-    ADDRESS("address", "Ulice a číslo popisné/orientační", true),
-    CITY("city", "Město", true),
-    POSTAL_CODE("postalCode", "PSČ", true),
-    ICO("ico", "IČ", true),
-    BANK("bank", "Banka", true),
-    ACCOUNT_NUMBER("accountNumber", "Číslo účtu", true),
-    PHONE("phone", "Telefon", true),
-    MAIL("mail", "E-mail", true),
-    WEB("web", "Web", false),
-    SIGNATURE_PATH("signaturePath", "Obrázek podpisu", false),
-    RESULT_FOLDER("resultFolder", "Složka pro nové faktury", true);
+public enum Detail {
+    INVOICE_NUMBER(XMLConstants.DETAILS_INVOICE_NUMBER, "Číslo dokladu", true),    
+    ISSUE_DATE("issueDate", "Datum vystavení", true),
+    PAYMENT_DUE("paymentDue", "Datum splatnosti", true);
 
     private final String nodeName;
     private final String label;
     private final boolean mandatory;
     
-    private Contractor(String nodeName, String formFieldName, boolean mandatory) {
+    private Detail(String nodeName, String formFieldName, boolean mandatory) {
         this.nodeName = nodeName;
         this.label = formFieldName;
         this.mandatory = mandatory;

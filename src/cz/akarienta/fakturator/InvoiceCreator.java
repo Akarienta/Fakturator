@@ -1,5 +1,6 @@
 package cz.akarienta.fakturator;
 
+import cz.akarienta.fakturator.xml.XMLConstants;
 import cz.akarienta.fakturator.xml.XMLReader;
 
 import java.io.File;
@@ -7,6 +8,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
@@ -38,18 +41,16 @@ import org.apache.fop.apps.MimeConstants;
 public class InvoiceCreator {
 
     private final static String INVOICE_FILENAME_BASE = "faktura_";
-    private final static String INVOICE_NUMBER_XPATH_Q = "/invoice/number";
 
     private final static String BASE_DIR = "src/cz/akarienta/fakturator/pdf";
 
-    private final static String INVOICE_DATA = "invoice.xml";
     private final static String INVOICE_DEFAULT_TEMPLATE = "invoiceDefaultTemplate.xsl";
     private final static String FONT_CONFIG = "fontcfg.xml";
 
     private final File baseDir = new File(BASE_DIR);
     private final File outDir;
 
-    private final File xmlFile = new File(baseDir, INVOICE_DATA);
+    private final File xmlFile = new File(XMLConstants.INVOICE_DATA);
     private final File xsltFile = new File(baseDir, INVOICE_DEFAULT_TEMPLATE);
     private final File fontFile = new File(baseDir, FONT_CONFIG);
     private final File pdfFile;
@@ -57,17 +58,26 @@ public class InvoiceCreator {
     /**
      * @param resultFolder folder where to store rendered invoice
      */
-    public InvoiceCreator(String resultFolder) {
-        this.outDir = new File(resultFolder);
+    public InvoiceCreator() {
+        this.outDir = new File(getResultDir());
         this.outDir.mkdirs();
         this.pdfFile = new File(outDir, getInvoiceFilename());
+    }
+
+    private String getResultDir() {
+        XMLReader xmlReader = new XMLReader(this.xmlFile.getAbsolutePath());
+        try {
+            return xmlReader.getElementContentText(XMLConstants.RESULT_FOLDER_XPATH);
+        } catch (ParserConfigurationException | SAXException | XPathExpressionException | IOException ex) {
+            return System.getProperty("user.home");
+        }
     }
 
     private String getInvoiceFilename() {
         XMLReader xmlReader = new XMLReader(this.xmlFile.getAbsolutePath());
         try {
-            return INVOICE_FILENAME_BASE + xmlReader.getElementContentText(INVOICE_NUMBER_XPATH_Q) + ".pdf";
-        } catch (ParserConfigurationException|SAXException|XPathExpressionException|IOException ex) {
+            return INVOICE_FILENAME_BASE + xmlReader.getElementContentText(XMLConstants.INVOICE_NUMBER_XPATH) + ".pdf";
+        } catch (ParserConfigurationException | SAXException | XPathExpressionException | IOException ex) {
             return INVOICE_FILENAME_BASE + UUID.randomUUID() + ".pdf";
         }
     }
@@ -105,16 +115,5 @@ public class InvoiceCreator {
         } finally {
             out.close();
         }
-
     }
-
-    /*public static void main(String[] args) {
-        try {
-            InvoiceCreator invoiceCreator = new InvoiceCreator("/home/akarienta/Plocha");
-            invoiceCreator.createInvoice();
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }*/
 }

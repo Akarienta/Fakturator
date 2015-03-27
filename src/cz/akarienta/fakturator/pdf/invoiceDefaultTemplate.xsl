@@ -41,7 +41,7 @@
                     <fo:block>
                         <fo:inline font-size="22px">Faktura</fo:inline>
                         <fo:inline font-size="28px" padding-left="2mm">
-                            <xsl:value-of select="number"/>
+                            <xsl:value-of select="details/invoiceNumber"/>
                         </fo:inline>
                     </fo:block>
                     <fo:block>
@@ -119,16 +119,16 @@
                                         <fo:block-container margin="2mm">
                                             <fo:block margin-top="3mm">Uhraďte, prosím, převodem na níže uvedený účet.</fo:block>
                                             <fo:block margin-top="3mm">
-                                                <xsl:value-of select="details/bank"/>
+                                                <xsl:value-of select="contractor/bank"/>
                                             </fo:block>
                                             <fo:block margin-top="1mm">
-                                                <xsl:value-of select="details/accountNumber"/>
+                                                <xsl:value-of select="contractor/accountNumber"/>
                                             </fo:block>    
                                         </fo:block-container>
                                     </fo:table-cell>
                                     <fo:table-cell>
                                         <fo:block border-style="double" border="2px" margin-right="0" margin-top="5mm" padding="3mm" font-size="22px" text-align="center">
-                                            <xsl:value-of select="totalSum"/>
+                                            <xsl:value-of select="details/totalSum"/>
                                         </fo:block>
                                     </fo:table-cell>
                                 </fo:table-row>
@@ -154,7 +154,7 @@
                                 </fo:table-row>
                             </fo:table-header>
                             <fo:table-body>
-                                <xsl:apply-templates select="item"/>
+                                <xsl:apply-templates select="items/item"/>
                             </fo:table-body>
                         </fo:table>
                     </fo:block>
@@ -168,7 +168,7 @@
     <!-- ========================= -->
     <!-- child element: item       -->
     <!-- ========================= -->
-    <xsl:template match="item">
+    <xsl:template match="items/item">
         <fo:table-row>
             <fo:table-cell padding-left="4mm" padding="2mm" border-right-style="dotted" border-color="gray" border-after-style="dotted">
                 <xsl:if test="position() mod 2 != 1">
