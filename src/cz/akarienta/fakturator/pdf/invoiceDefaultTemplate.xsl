@@ -158,9 +158,11 @@
                             </fo:table-body>
                         </fo:table>
                     </fo:block>
-                    <fo:block text-align="right" margin-top="1cm">
-                        <fo:external-graphic src="{contractor/signaturePath}" content-width="scale-to-fit" height="2cm" scaling="uniform" />
-                    </fo:block>
+                    <xsl:if test="(/invoice/contractor/signaturePath) and (/invoice/contractor/signaturePath != '')">-->
+                        <fo:block text-align="right" margin-top="1cm">
+                            <fo:external-graphic src="{contractor/signaturePath}" content-width="scale-to-fit" height="2cm" scaling="uniform"/>
+                        </fo:block>
+                    </xsl:if>
                 </fo:flow>
             </fo:page-sequence>
         </fo:root>

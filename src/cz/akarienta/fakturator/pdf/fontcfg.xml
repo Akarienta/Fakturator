@@ -3,7 +3,7 @@
     <renderers>
         <renderer mime="application/pdf">
             <fonts>
-                <font kerning="yes" embed-url="src/cz/akarienta/fakturator/pdf/calibri.ttf">
+                <font kerning="yes" embed-url="/cz/akarienta/fakturator/pdf/calibri.ttf">
                     <font-triplet name="Calibri" style="normal" weight="normal"/>
                 </font>
             </fonts>

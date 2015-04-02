@@ -1,11 +1,15 @@
 package cz.akarienta.fakturator.xml;
 
+import cz.akarienta.fakturator.data.Contractor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,7 +41,8 @@ public class XMLWriter {
     private final File xmlFile;
 
     public XMLWriter(String fileName) {
-        this.xmlFile = new File(fileName);
+        File fileBase = new File(XMLConstants.USER_HOME, XMLConstants.APP_CONF_DIR);
+        this.xmlFile = new File(fileBase, fileName);
     }
 
     /**
@@ -66,8 +71,8 @@ public class XMLWriter {
 
         Element rootElement = doc.getDocumentElement();
 
-        Element newCustomer = doc.createElement(XMLConstants.CUSTOMER_ROOT);
-        Attr rootElementNameAttr = doc.createAttribute(XMLConstants.CUSTOMER_ID_ATTR);
+        Element newCustomer = doc.createElement(XMLConstants.CUSTOMERS_CUSTOMER_ROOT);
+        Attr rootElementNameAttr = doc.createAttribute(XMLConstants.CUSTOMERS_CUSTOMER_ID_ATTR);
         rootElementNameAttr.setValue(name);
         newCustomer.setAttributeNode(rootElementNameAttr);
 
@@ -84,7 +89,7 @@ public class XMLWriter {
 
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer trans = tf.newTransformer();
-        trans.setOutputProperty(OutputKeys.INDENT, "yes"); 
+        trans.setOutputProperty(OutputKeys.INDENT, "yes");
         DOMSource domDoc = new DOMSource(doc);
         StreamResult res = new StreamResult(this.xmlFile);
         trans.transform(domDoc, res);
@@ -96,7 +101,7 @@ public class XMLWriter {
         Document doc = dBuilder.parse(this.xmlFile);
 
         XPath xPath = XPathFactory.newInstance().newXPath();
-        Node node = (Node) xPath.evaluate("//*[@" + XMLConstants.CUSTOMER_ID_ATTR + "='" + name + "']", doc, XPathConstants.NODE);
+        Node node = (Node) xPath.evaluate("//*[@" + XMLConstants.CUSTOMERS_CUSTOMER_ID_ATTR + "='" + name + "']", doc, XPathConstants.NODE);
         doc.getDocumentElement().removeChild(node);
 
         TransformerFactory tf = TransformerFactory.newInstance();
@@ -108,9 +113,6 @@ public class XMLWriter {
 
     public void createInvoice(Map<String, String> contractor, Map<String, String> customer, Map<String, String> details, List<Pair<String, String>> items) throws ParserConfigurationException, TransformerConfigurationException, TransformerException, FileNotFoundException {
 
-        /*if (this.xmlFile.exists()) {
-            this.xmlFile.delete();
-        }*/
         PrintWriter writer = new PrintWriter(this.xmlFile);
         writer.print("");
         writer.close();
@@ -130,7 +132,7 @@ public class XMLWriter {
         }
         rootEl.appendChild(contractorEl);
 
-        Element customerEl = doc.createElement(XMLConstants.CUSTOMER_ROOT);
+        Element customerEl = doc.createElement(XMLConstants.CUSTOMERS_CUSTOMER_ROOT);
         for (Map.Entry<String, String> item : customer.entrySet()) {
             Element el = doc.createElement(item.getKey());
             el.appendChild(doc.createTextNode(item.getValue()));
@@ -155,13 +157,90 @@ public class XMLWriter {
             Element priceEl = doc.createElement(XMLConstants.ITEMS_ITEM_PRICE);
             priceEl.appendChild(doc.createTextNode(item.getValue1()));
             itemEl.appendChild(priceEl);
-            
+
             itemsEl.appendChild(itemEl);
         }
         rootEl.appendChild(itemsEl);
-        
+
         Transformer trans = TransformerFactory.newInstance().newTransformer();
-        trans.setOutputProperty(OutputKeys.INDENT, "yes"); 
+        trans.setOutputProperty(OutputKeys.INDENT, "yes");
+        DOMSource domDoc = new DOMSource(doc);
+        StreamResult res = new StreamResult(this.xmlFile);
+        trans.transform(domDoc, res);
+    }
+
+    public void createEmptyContractor() throws ParserConfigurationException, TransformerConfigurationException, TransformerException, FileNotFoundException {
+        PrintWriter writer = new PrintWriter(this.xmlFile);
+        writer.print("");
+        writer.close();
+
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document doc = docBuilder.newDocument();
+
+        Element rootEl = doc.createElement(XMLConstants.CONTRACTOR_ROOT);
+        doc.appendChild(rootEl);
+
+        List<Contractor> contractorFields = new ArrayList<Contractor>();
+        contractorFields.add(Contractor.NAME);
+        contractorFields.add(Contractor.ADDRESS);
+        contractorFields.add(Contractor.CITY);
+        contractorFields.add(Contractor.POSTAL_CODE);
+        contractorFields.add(Contractor.ICO);
+        contractorFields.add(Contractor.BANK);
+        contractorFields.add(Contractor.ACCOUNT_NUMBER);
+        contractorFields.add(Contractor.PHONE);
+        contractorFields.add(Contractor.MAIL);
+        contractorFields.add(Contractor.WEB);
+        contractorFields.add(Contractor.SIGNATURE_PATH);
+        contractorFields.add(Contractor.RESULT_FOLDER);
+
+        for (Contractor field : contractorFields) {
+            Element el = doc.createElement(field.getNodeName());
+            rootEl.appendChild(el);
+        }
+
+        Transformer trans = TransformerFactory.newInstance().newTransformer();
+        trans.setOutputProperty(OutputKeys.INDENT, "yes");
+        DOMSource domDoc = new DOMSource(doc);
+        StreamResult res = new StreamResult(this.xmlFile);
+        trans.transform(domDoc, res);
+    }
+
+    public void createEmptyCustomers() throws ParserConfigurationException, TransformerConfigurationException, TransformerException, FileNotFoundException {
+        PrintWriter writer = new PrintWriter(this.xmlFile);
+        writer.print("");
+        writer.close();
+
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document doc = docBuilder.newDocument();
+
+        Element rootEl = doc.createElement(XMLConstants.CUSTOMERS_ROOT);
+        doc.appendChild(rootEl);
+
+        Transformer trans = TransformerFactory.newInstance().newTransformer();
+        trans.setOutputProperty(OutputKeys.INDENT, "yes");
+        DOMSource domDoc = new DOMSource(doc);
+        StreamResult res = new StreamResult(this.xmlFile);
+        trans.transform(domDoc, res);
+    }
+
+    public void createEmptyNumber() throws ParserConfigurationException, TransformerConfigurationException, TransformerException, FileNotFoundException {
+        PrintWriter writer = new PrintWriter(this.xmlFile);
+        writer.print("");
+        writer.close();
+
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document doc = docBuilder.newDocument();
+
+        Element rootEl = doc.createElement(XMLConstants.NUMBER_ROOT);
+        rootEl.appendChild(doc.createTextNode("1"));
+        doc.appendChild(rootEl);
+
+        Transformer trans = TransformerFactory.newInstance().newTransformer();
+        trans.setOutputProperty(OutputKeys.INDENT, "yes");
         DOMSource domDoc = new DOMSource(doc);
         StreamResult res = new StreamResult(this.xmlFile);
         trans.transform(domDoc, res);

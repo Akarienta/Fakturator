@@ -37,7 +37,8 @@ public class XMLReader {
      * @param fileName name of the XML file to read
      */
     public XMLReader(String fileName) {
-        this.xmlFile = new File(fileName);
+        File fileBase = new File(XMLConstants.USER_HOME, XMLConstants.APP_CONF_DIR);
+        this.xmlFile = new File(fileBase, fileName);
     }
 
     /**
@@ -68,7 +69,7 @@ public class XMLReader {
         for (int i = 0; i < customerNodes.getLength(); i++) {
             if (customerNodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
                 Element el = (Element) customerNodes.item(i);
-                customers.add(el.getAttribute(XMLConstants.CUSTOMER_ID_ATTR));
+                customers.add(el.getAttribute(XMLConstants.CUSTOMERS_CUSTOMER_ID_ATTR));
             }
         }
 
@@ -76,7 +77,7 @@ public class XMLReader {
     }
 
     public Map<String, String> getCustomer(String name) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
-        return getElementsInMap("//*[@" + XMLConstants.CUSTOMER_ID_ATTR + "='" + name + "']");
+        return getElementsInMap("//*[@" + XMLConstants.CUSTOMERS_CUSTOMER_ID_ATTR + "='" + name + "']");
     }
 
     public Map<String, String> getContractor() throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {

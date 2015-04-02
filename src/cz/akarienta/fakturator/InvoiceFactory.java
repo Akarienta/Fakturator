@@ -3,6 +3,7 @@ package cz.akarienta.fakturator;
 import cz.akarienta.fakturator.xml.XMLConstants;
 import cz.akarienta.fakturator.xml.XMLReader;
 import cz.akarienta.fakturator.xml.XMLWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -32,12 +33,20 @@ public class InvoiceFactory {
     private Map<String, String> details = new TreeMap<String, String>();
     private List<Pair<String, String>> items = new ArrayList<Pair<String, String>>();
     
-    private XMLWriter invoiceWriter = new XMLWriter(XMLConstants.INVOICE_DATA);
+    private XMLWriter invoiceWriter;
     private XMLReader contractorReader = new XMLReader(XMLConstants.CONTRACTOR_DATA);
     private XMLReader customerReader = new XMLReader(XMLConstants.CUSTOMERS_DATA);
     
+    private File invoice;
+    
     public InvoiceFactory(String customerName, Map<String, String> details, List<Pair<String, BigDecimal>> items) throws ParserConfigurationException, SAXException, XPathExpressionException, IOException {
         this.contractor = contractorReader.getContractor();
+        
+        // fix windows slashes
+        String signaturePath = this.contractor.get(XMLConstants.CONTRACTOR_SIGNATURE_PATH);
+        signaturePath = signaturePath.replace("\\", "/");
+        this.contractor.put(XMLConstants.CONTRACTOR_SIGNATURE_PATH, signaturePath);
+            
         this.customer = customerReader.getCustomer(customerName);
         this.details.putAll(details);
         
@@ -52,9 +61,16 @@ public class InvoiceFactory {
         
         this.details.put(XMLConstants.DETAILS_TOTAL_SUM, bigDecimalToCzechCrowns(totalSum));
         
-        String invNum = this.details.get(XMLConstants.DETAILS_INVOICE_NUMBER);
+        String invNum = String.format("%04d", Integer.parseInt(this.details.get(XMLConstants.DETAILS_INVOICE_NUMBER)));
         String year = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
         this.details.put(XMLConstants.DETAILS_INVOICE_NUMBER, year + "-" + invNum);
+        
+        File fileBase = new File(XMLConstants.USER_HOME, XMLConstants.APP_CONF_DIR);
+        String invoiceFileName = String.format(XMLConstants.INVOICE_NAME, this.details.get(XMLConstants.DETAILS_INVOICE_NUMBER));
+        
+        this.invoice = new File(fileBase, invoiceFileName);
+        this.invoice.createNewFile();
+        this.invoiceWriter = new XMLWriter(invoiceFileName);
     }
     
     public String bigDecimalToCzechCrowns(BigDecimal price) {
@@ -66,7 +82,12 @@ public class InvoiceFactory {
         return result;
     }
     
-    public void renderInvoiceXml() throws ParserConfigurationException, TransformerException, TransformerConfigurationException, FileNotFoundException {
+    public File renderInvoiceXml() throws ParserConfigurationException, TransformerException, TransformerConfigurationException, FileNotFoundException {
         invoiceWriter.createInvoice(this.contractor, this.customer, this.details, this.items);
+        return this.invoice;
+    }
+    
+    public String getInvoiceName() {
+        return String.format(InvoiceCreator.INVOICE_FILENAME_BASE, this.details.get(XMLConstants.DETAILS_INVOICE_NUMBER));
     }
 }

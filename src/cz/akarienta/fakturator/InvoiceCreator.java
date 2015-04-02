@@ -5,7 +5,9 @@ import cz.akarienta.fakturator.xml.XMLReader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -27,6 +29,7 @@ import org.xml.sax.SAXException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.fop.apps.FOURIResolver;
 
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
@@ -40,53 +43,66 @@ import org.apache.fop.apps.MimeConstants;
  */
 public class InvoiceCreator {
 
-    private final static String INVOICE_FILENAME_BASE = "faktura_";
+    public final static String INVOICE_FILENAME_BASE  = "faktura_%s.pdf";
+    
+    private final static String INVOICE_RESOURCE_PACKAGE = "/cz/akarienta/fakturator/pdf/";
+    private final static String INVOICE_DEFAULT_TEMPLATE = INVOICE_RESOURCE_PACKAGE + "invoiceDefaultTemplate.xsl";
+    private final static String FONT_CONFIG = INVOICE_RESOURCE_PACKAGE + "fontcfg.xml";
 
-    private final static String BASE_DIR = "src/cz/akarienta/fakturator/pdf";
-
-    private final static String INVOICE_DEFAULT_TEMPLATE = "invoiceDefaultTemplate.xsl";
-    private final static String FONT_CONFIG = "fontcfg.xml";
-
-    private final File baseDir = new File(BASE_DIR);
+    private final File baseDir;
     private final File outDir;
 
-    private final File xmlFile = new File(XMLConstants.INVOICE_DATA);
-    private final File xsltFile = new File(baseDir, INVOICE_DEFAULT_TEMPLATE);
-    private final File fontFile = new File(baseDir, FONT_CONFIG);
+    private final File xmlFile;
+    private final InputStream xsltFile;
+    private final InputStream fontFile;
     private final File pdfFile;
-
+    
     /**
      * @param resultFolder folder where to store rendered invoice
      */
-    public InvoiceCreator() {
+    public InvoiceCreator(File xmlFile) throws URISyntaxException {
+        this.xmlFile = xmlFile;
+        
+        this.baseDir = new File(InvoiceCreator.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+        
+        //File resourceBase = new File(baseDir, INVOICE_RESOURCE_PACKAGE);
+        this.xsltFile = getClass().getResourceAsStream(INVOICE_DEFAULT_TEMPLATE);
+        this.fontFile = getClass().getResourceAsStream(FONT_CONFIG);
+        
         this.outDir = new File(getResultDir());
         this.outDir.mkdirs();
         this.pdfFile = new File(outDir, getInvoiceFilename());
     }
 
     private String getResultDir() {
-        XMLReader xmlReader = new XMLReader(this.xmlFile.getAbsolutePath());
         try {
+            XMLReader xmlReader = new XMLReader(this.xmlFile.getName());
             return xmlReader.getElementContentText(XMLConstants.RESULT_FOLDER_XPATH);
         } catch (ParserConfigurationException | SAXException | XPathExpressionException | IOException ex) {
-            return System.getProperty("user.home");
+            ex.printStackTrace();
+            return XMLConstants.USER_HOME;
         }
     }
 
     private String getInvoiceFilename() {
-        XMLReader xmlReader = new XMLReader(this.xmlFile.getAbsolutePath());
         try {
-            return INVOICE_FILENAME_BASE + xmlReader.getElementContentText(XMLConstants.INVOICE_NUMBER_XPATH) + ".pdf";
+            XMLReader xmlReader = new XMLReader(this.xmlFile.getName());
+            return String.format(INVOICE_FILENAME_BASE, xmlReader.getElementContentText(XMLConstants.INVOICE_NUMBER_XPATH));
         } catch (ParserConfigurationException | SAXException | XPathExpressionException | IOException ex) {
-            return INVOICE_FILENAME_BASE + UUID.randomUUID() + ".pdf";
+            ex.printStackTrace();
+            return String.format(INVOICE_FILENAME_BASE, UUID.randomUUID());
         }
     }
 
     public void createInvoice() throws SAXException, IOException, ConfigurationException, TransformerConfigurationException, TransformerException {
         // Configure fopFactory as desired
         FopFactory fopFactory = FopFactory.newInstance();
+        
+        FOURIResolver uriResolver = (FOURIResolver) fopFactory.getURIResolver();
+        uriResolver.setCustomURIResolver(new ClasspathUriResolver());
+        
         DefaultConfigurationBuilder cfgBuilder = new DefaultConfigurationBuilder();
-        Configuration cfg = cfgBuilder.buildFromFile(this.fontFile);
+        Configuration cfg = cfgBuilder.build(this.fontFile);
         fopFactory.setUserConfig(cfg);
 
         // Configure foUserAgent as desired
@@ -95,25 +111,23 @@ public class InvoiceCreator {
         // Setup output
         OutputStream out = new java.io.FileOutputStream(this.pdfFile);
         out = new java.io.BufferedOutputStream(out);
+        
+        // Construct fop with desired output format
+        Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);
 
-        try {
-            // Construct fop with desired output format
-            Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);
+        // Setup XSLT
+        TransformerFactory factory = TransformerFactory.newInstance();
+        Transformer transformer = factory.newTransformer(new StreamSource(this.xsltFile));
 
-            // Setup XSLT
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer(new StreamSource(this.xsltFile));
+        // Setup input for XSLT transformation
+        Source src = new StreamSource(this.xmlFile);
 
-            // Setup input for XSLT transformation
-            Source src = new StreamSource(this.xmlFile);
+        // Resulting SAX events (the generated FO) must be piped through to FOP
+        Result res = new SAXResult(fop.getDefaultHandler());
 
-            // Resulting SAX events (the generated FO) must be piped through to FOP
-            Result res = new SAXResult(fop.getDefaultHandler());
-
-            // Start XSLT transformation and FOP processing
-            transformer.transform(src, res);
-        } finally {
-            out.close();
-        }
+        // Start XSLT transformation and FOP processing
+        transformer.transform(src, res);
+            
+        out.close();
     }
 }
