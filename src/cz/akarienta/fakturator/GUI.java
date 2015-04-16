@@ -64,9 +64,7 @@ public class GUI extends javax.swing.JFrame {
     private final XMLReader numberReader = new XMLReader(XMLConstants.NUMBER_DATA);
     private final XMLWriter numberWriter = new XMLWriter(XMLConstants.NUMBER_DATA);
 
-    /**
-     * Creates new form gui
-     */
+    /** Creates new form gui */
     public GUI() {
         setIcon();
         initFiles();

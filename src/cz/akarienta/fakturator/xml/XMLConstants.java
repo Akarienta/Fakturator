@@ -1,4 +1,3 @@
-
 package cz.akarienta.fakturator.xml;
 
 /**

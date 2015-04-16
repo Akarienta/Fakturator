@@ -6,6 +6,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
+/**
+ * URI resolver to have xml config files in java package.
+ *
+ * @author akarienta
+ */
 public class ClasspathUriResolver implements URIResolver {
 
     @Override
