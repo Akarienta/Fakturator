@@ -7,11 +7,12 @@ package cz.akarienta.fakturator.data;
  */
 public enum Customer {
     NAME("name", "Jméno", true),    
-    ADDRESS("address", "Ulice a číslo popisné/orientační", true),
+    ADDRESS("address", "Ulice a č.p./č.o.", true),
     CITY("city", "Město", true),
     POSTAL_CODE("postalCode", "PSČ", true),
-    ICO("ico", "IČ", true),
-    DIC("dic", "DIČ", true);
+    ICO("ico", "IČ", false),
+    DIC("dic", "DIČ", false),
+    SAVE_AS("saveAs", "Uložit odběratele jako", true);
 
     private final String nodeName;
     private final String label;

@@ -37,19 +37,51 @@
                         </fo:block>
                     </fo:block-container>
                 </fo:static-content>
-                <fo:flow flow-name="xsl-region-body">
+                <fo:flow flow-name="xsl-region-body">>
                     <fo:block>
                         <fo:inline font-size="22px">Faktura</fo:inline>
                         <fo:inline font-size="28px" padding-left="2mm">
                             <xsl:value-of select="details/invoiceNumber"/>
                         </fo:inline>
                     </fo:block>
-                    <fo:block>
-                        Vystaveno dne <xsl:value-of select="details/issueDate"/>
-                    </fo:block>
-                    <fo:block margin-top="1mm">
-                        Datum splatnosti <xsl:value-of select="details/paymentDue"/>
-                    </fo:block>
+                    <fo:table width="100%" table-layout="fixed" border-collapse="collapse">
+                        <fo:table-column column-width="proportional-column-width(86)" />
+                        <fo:table-column column-width="proportional-column-width(14)" />
+                        <fo:table-body>
+                            <fo:table-row>
+                                <fo:table-cell text-align="right" margin-right="2mm">
+                                    <fo:block>Vystaveno dne</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block>
+                                        <xsl:value-of select="details/issueDate"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                            <fo:table-row>
+                                <fo:table-cell text-align="right" margin-right="2mm">
+                                    <fo:block margin-top="1mm">Datum splatnosti</fo:block>
+                                </fo:table-cell>
+                                <fo:table-cell>
+                                    <fo:block margin-top="1mm">
+                                        <xsl:value-of select="details/paymentDue"/>
+                                    </fo:block>
+                                </fo:table-cell>
+                            </fo:table-row>
+                            <xsl:if test="details/taxDate != ''">
+                                <fo:table-row>
+                                    <fo:table-cell text-align="right" margin-right="2mm">
+                                        <fo:block margin-top="1mm">Datum zdanitelného plnění</fo:block>
+                                    </fo:table-cell>
+                                    <fo:table-cell>
+                                         <fo:block margin-top="1mm">
+                                            <xsl:value-of select="details/taxDate"/>
+                                        </fo:block>
+                                    </fo:table-cell>
+                                </fo:table-row>
+                            </xsl:if>
+                        </fo:table-body>    
+                    </fo:table>
                     <fo:block margin-top="1cm">
                         <fo:table width="100%" table-layout="fixed" border-collapse="collapse">
                             <fo:table-column column-width="50%" />
@@ -57,11 +89,11 @@
                             <fo:table-body>
                                 <fo:table-row>
                                     <fo:table-cell>
-                                        <fo:block-container width="8cm">
-                                            <fo:block background-color="black" color="white" padding="2mm" margin="0" font-size="16px">
+                                        <fo:block-container width="8.75cm">
+                                            <fo:block margin-right="0.75cm" background-color="black" color="white" padding="2mm" font-size="16px">
                                                 Dodavatel
                                             </fo:block>
-                                            <fo:block-container margin="2mm">
+                                            <fo:block-container margin-top="2mm" margin-bottom="2mm" margin-left="2mm">
                                                 <fo:block margin-top="3mm">
                                                     <xsl:value-of select="contractor/name"/>
                                                 </fo:block>
@@ -75,16 +107,16 @@
                                                     <xsl:value-of select="contractor/postalCode"/>
                                                 </fo:block>
                                                 <fo:block margin-top="3mm">IČ: <xsl:value-of select="contractor/ico"/></fo:block>
-                                                <fo:block margin-top="3mm">Nejsem plátce DPH.</fo:block>
+                                                <fo:block margin-top="3mm">Není plátcem DPH.</fo:block>
                                             </fo:block-container>
                                         </fo:block-container>
                                     </fo:table-cell>
                                     <fo:table-cell>
-                                        <fo:block-container width="8.25cm" margin-left="2.5mm">
-                                            <fo:block background-color="black" color="white" padding="2mm" margin="0" font-size="16px">
+                                        <fo:block-container width="8.75cm">
+                                            <fo:block margin-left="0.75cm" background-color="black" color="white" padding="2mm" font-size="16px">
                                                 Odběratel
                                             </fo:block>
-                                            <fo:block-container margin="3.25mm">
+                                            <fo:block-container margin-top="2mm" margin-bottom="2mm" margin-left="0.73cm">
                                                 <fo:block margin-top="3mm">
                                                     <xsl:value-of select="customer/name"/>
                                                 </fo:block>
@@ -97,8 +129,18 @@
                                                 <fo:block margin-top="1mm">
                                                     <xsl:value-of select="customer/postalCode"/>
                                                 </fo:block>
-                                                <fo:block margin-top="3mm">IČ: <xsl:value-of select="customer/ico"/></fo:block>
-                                                <fo:block margin-top="1mm">DIČ: <xsl:value-of select="customer/dic"/></fo:block>
+                                                <xsl:if test="customer/ico != ''">
+                                                    <fo:block margin-top="3mm">IČ: <xsl:value-of select="customer/ico"/></fo:block>
+                                                </xsl:if>
+                                                <xsl:if test="customer/ico = ''">
+                                                    <fo:block margin-top="3mm">Fyzická osoba - nepodnikatel</fo:block>
+                                                </xsl:if>
+                                                <xsl:if test="customer/ico != '' and customer/dic != '' and customer/dic != '-1'">
+                                                    <fo:block margin-top="1mm">DIČ: <xsl:value-of select="customer/dic"/></fo:block>
+                                                </xsl:if>
+                                                <xsl:if test="customer/ico != '' and customer/dic = '-1'">
+                                                    <fo:block margin-top="3mm">Není plátcem DPH.</fo:block>
+                                                </xsl:if>
                                             </fo:block-container>
                                         </fo:block-container>
                                     </fo:table-cell>
@@ -147,7 +189,7 @@
                                         </fo:block>
                                     </fo:table-cell>
                                     <fo:table-cell background-color="black" color="white" padding="2mm">
-                                        <fo:block>
+                                        <fo:block text-align="right">
                                             Cena
                                         </fo:block>
                                     </fo:table-cell>
@@ -184,7 +226,7 @@
                 <xsl:if test="position() mod 2 != 1">
                     <xsl:attribute name="background-color">#E6E6E6</xsl:attribute>
                 </xsl:if>
-                <fo:block>
+                <fo:block text-align="right">
                     <xsl:value-of select="price"/>
                 </fo:block>
             </fo:table-cell>

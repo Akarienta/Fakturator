@@ -10,6 +10,7 @@ import cz.akarienta.fakturator.xml.XMLConstants;
 public enum Detail {
     INVOICE_NUMBER(XMLConstants.DETAILS_INVOICE_NUMBER, "Číslo dokladu", true),    
     ISSUE_DATE("issueDate", "Datum vystavení", true),
+    TAX_DATE("taxDate", "Datum z. p.", false),
     PAYMENT_DUE("paymentDue", "Datum splatnosti", true);
 
     private final String nodeName;

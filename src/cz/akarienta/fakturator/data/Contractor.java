@@ -7,7 +7,7 @@ package cz.akarienta.fakturator.data;
  */
 public enum Contractor {
     NAME("name", "Jméno", true),    
-    ADDRESS("address", "Ulice a číslo popisné/orientační", true),
+    ADDRESS("address", "Ulice a č.p./č.o.", true),
     CITY("city", "Město", true),
     POSTAL_CODE("postalCode", "PSČ", true),
     ICO("ico", "IČ", true),

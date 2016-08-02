@@ -195,37 +195,14 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="tablePanel" max="32767" attributes="0"/>
-              <Group type="102" alignment="1" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="238" max="-2" attributes="0"/>
+                  <Component id="printInvoice" min="-2" pref="291" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="dateOfIssue" min="-2" max="-2" attributes="0"/>
-                              <Component id="invoiceNumber" alignment="1" min="-2" pref="108" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace pref="18" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="dateOfIssueField" min="-2" pref="227" max="-2" attributes="0"/>
-                              <Group type="102" attributes="0">
-                                  <Component id="invoiceNumberField" min="-2" pref="56" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="useAsInvoiceNumber" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="dateOfValidity" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="dateOfValidityField" min="-2" pref="225" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="customer" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="customerList" min="-2" pref="225" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
@@ -258,13 +235,48 @@
                               <Component id="deleteItem" max="32767" attributes="0"/>
                           </Group>
                       </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                                  <Component id="dateOfIssue" min="-2" max="-2" attributes="0"/>
+                                  <Component id="invoiceNumber" alignment="1" min="-2" pref="108" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="dateOfTax" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="dateOfTaxField" min="-2" pref="227" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="dateOfTaxTip" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="dateOfIssueField" min="-2" pref="227" max="-2" attributes="0"/>
+                                      <Group type="102" attributes="0">
+                                          <Component id="invoiceNumberField" min="-2" pref="56" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="useAsInvoiceNumber" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="dateOfValidity" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="dateOfValidityField" min="-2" pref="225" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="customer" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="32767" attributes="0"/>
+                                          <Component id="customerList" min="-2" pref="225" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                          </Group>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="238" max="-2" attributes="0"/>
-                  <Component id="printInvoice" min="-2" pref="291" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -292,6 +304,12 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="dateOfTax" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="dateOfTaxField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="dateOfTaxTip" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="18" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="newItemHeadline" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="deleteItemHeadline" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -310,8 +328,8 @@
                       <Component id="addItem" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="deleteItem" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="tablePanel" pref="213" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="tablePanel" min="-2" pref="206" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="printInvoice" min="-2" pref="53" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
@@ -473,6 +491,18 @@
             <Property name="text" type="java.lang.String" value="pou&#x17e;&#xed;t pro &#x10d;&#xed;slov&#xe1;n&#xed;"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JLabel" name="dateOfTax">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Datum z. p."/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="dateOfTaxField">
+        </Component>
+        <Component class="javax.swing.JLabel" name="dateOfTaxTip">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="(nepovinn&#xe9;)"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="contractorPanel">
@@ -497,82 +527,61 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="contractorCity" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorPostalCode" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorIco" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorBank" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorAccountNumber" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorPhone" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorMail" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorWeb" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorSignatureFile" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorName" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorAddress" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="contractorResultFolder" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="contractorAccountNumber" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="contractorBank" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="contractorPhone" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="contractorMail" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="contractorPostalCode" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="contractorIco" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="contractorWeb" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="contractorSignatureFile" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="contractorResultFolder" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="contractorIcoField" alignment="0" pref="253" max="32767" attributes="0"/>
+                              <Component id="contractorBankField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="contractorAccountNumberField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="contractorPhoneField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="contractorMailField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="contractorWebField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="contractorPostalCodeField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="contractorCityField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="contractorAddressField" max="32767" attributes="0"/>
+                              <Component id="contractorNameField" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="contractorIcoField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="contractorBankField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="contractorAccountNumberField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="contractorPhoneField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="contractorMailField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="contractorWebField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="contractorPostalCodeField" alignment="0" min="-2" pref="249" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="contractorBankNote" min="-2" max="-2" attributes="0"/>
-                                      <Component id="contractorAccountNumberNote" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="contractorResultFolderField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="contractorSignatureFileField" max="32767" attributes="0"/>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="contractorSaveButton" min="-2" pref="249" max="-2" attributes="0"/>
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="contractorSignatureBrowseButton" max="32767" attributes="0"/>
-                                      <Component id="contractorResultFolderBrowseButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
+                              <Component id="contractorBankNote" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorAccountNumberNote" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="contractorNameNote" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="contractorName" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="contractorResultFolderField" min="-2" pref="367" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="contractorNameField" min="-2" pref="249" max="-2" attributes="0"/>
+                                  <Component id="contractorResultFolderBrowseButton" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="contractorAddress" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="contractorCity" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                              <Component id="contractorSaveButton" min="-2" pref="249" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="contractorSignatureFileField" min="-2" pref="367" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="contractorAddressField" max="32767" attributes="0"/>
-                                      <Component id="contractorCityField" alignment="0" min="-2" pref="249" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="contractorSignatureBrowseButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="contractorNameNote" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="24" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -646,7 +655,7 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="contractorSaveButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="105" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -661,7 +670,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="contractorAddress">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Ulice a &#x10d;&#xed;slo popisn&#xe9;/orienta&#x10d;n&#xed;"/>
+            <Property name="text" type="java.lang.String" value="Ulice a &#x10d;.p./&#x10d;.o."/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="contractorAddressField">
@@ -824,9 +833,9 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="1" groupAlignment="0" attributes="0">
                           <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                               <Component id="customerName" min="-2" max="-2" attributes="0"/>
                               <Component id="customerAddress" min="-2" max="-2" attributes="0"/>
@@ -841,7 +850,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="customerSaveAsField" max="32767" attributes="0"/>
-                      <Component id="addCustomerButton" pref="244" max="32767" attributes="0"/>
+                      <Component id="addCustomerButton" max="32767" attributes="0"/>
                       <Component id="customerDicField" max="32767" attributes="0"/>
                       <Component id="customerIcoField" max="32767" attributes="0"/>
                       <Component id="customerPostalCodeField" max="32767" attributes="0"/>
@@ -850,12 +859,16 @@
                       <Component id="customerCityField" alignment="0" max="32767" attributes="0"/>
                       <Component id="newCustomer" alignment="0" max="32767" attributes="0"/>
                       <Component id="deleteCustomer" alignment="0" max="32767" attributes="0"/>
-                      <Component id="customerToDeletionList" alignment="0" max="32767" attributes="0"/>
+                      <Component id="customerToDeletionList" alignment="0" min="-2" pref="244" max="-2" attributes="0"/>
                       <Component id="deleteCustomerButton" alignment="0" min="-2" pref="242" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="customerSaveAsTip" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="82" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="customerDicTip" max="32767" attributes="0"/>
+                      <Component id="customerIcoTip" alignment="0" min="-2" pref="351" max="-2" attributes="0"/>
+                      <Component id="customerSaveAsTip" alignment="0" min="-2" pref="286" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="19" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -888,11 +901,13 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="customerIcoField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="customerIco" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerIcoTip" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="customerDicField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="customerDic" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="customerDicTip" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -902,7 +917,7 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="addCustomerButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="66" max="32767" attributes="0"/>
                   <Component id="deleteCustomer" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="customerToDeletionList" min="-2" max="-2" attributes="0"/>
@@ -952,7 +967,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="customerAddress">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Ulice a &#x10d;&#xed;slo popisn&#xe9;/orienta&#x10d;n&#xed;"/>
+            <Property name="text" type="java.lang.String" value="Ulice a &#x10d;.p./&#x10d;.o."/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="customerCity">
@@ -1010,6 +1025,22 @@
             <Property name="text" type="java.lang.String" value="n&#xe1;zev mus&#xed; b&#xfd;t jedine&#x10d;n&#xfd;"/>
           </Properties>
         </Component>
+        <Component class="javax.swing.JLabel" name="customerDicTip">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="2"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="-1 = nen&#xed; pl&#xe1;tce DPH, nevypln&#x11b;n&#xe9; = nic"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="customerIcoTip">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Cantarell" size="15" style="2"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="nevypln&#x11b;n&#xe9; = nepodnikatel"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="aboutPanel">
@@ -1035,28 +1066,13 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="321" max="-2" attributes="0"/>
-                          <Component id="aboutDate" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="287" max="-2" attributes="0"/>
-                          <Component id="aboutAuthor" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-              </Group>
-              <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="223" max="-2" attributes="0"/>
-                          <Component id="aboutAppName" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="91" max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" min="-2" pref="596" max="-2" attributes="0"/>
-                      </Group>
+                  <EmptySpace min="-2" pref="91" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="aboutLink" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="aboutAppName" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" alignment="2" min="-2" pref="596" max="-2" attributes="0"/>
+                      <Component id="aboutDate" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="aboutAuthor" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="93" max="32767" attributes="0"/>
               </Group>
@@ -1065,15 +1081,17 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
                   <Component id="aboutAppName" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="aboutDate" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Component id="aboutAuthor" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="aboutLink" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="158" max="32767" attributes="0"/>
+                  <EmptySpace pref="194" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -1084,7 +1102,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Cantarell" size="48" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Fakturator 1.0"/>
+            <Property name="text" type="java.lang.String" value="Fakturator 1.1"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -1098,7 +1116,7 @@
               <Properties>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="5"/>
-                <Property name="text" type="java.lang.String" value="BEERWARE LICENCE (&#x10c;ESK&#xc1; VERZE)&#xa;&#xa;&lt;ivana.dolezalova@gmail.com&gt; napsala tuto aplikaci. Pokud zachov&#xe1;te tento text,&#xa;m&#x16f;&#x17e;ete si s n&#xed; d&#x11b;lat, co chcete. Jestli m&#x11b; n&#x11b;kdy potk&#xe1;te a budete si myslet, &#x17e;e tato&#xa;aplikace stoj&#xed; za jedno pivo, kupte mi ho."/>
+                <Property name="text" type="java.lang.String" value="BEERWARE LICENCE (&#x10c;ESK&#xc1; VERZE)&#xa;&#xa;&lt;akarienta@gmail.com&gt; Ivana Dole&#x17e;alov&#xe1; napsala tuto aplikaci. Pokud zachov&#xe1;te tento&#xa;text, m&#x16f;&#x17e;ete si s n&#xed; d&#x11b;lat, co chcete. Jestli m&#x11b; n&#x11b;kdy potk&#xe1;te a budete si myslet, &#x17e;e tato&#xa;aplikace stoj&#xed; za jedno pivo, kupte mi ho."/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
                   <Insets value="[10, 10, 10, 10]"/>
@@ -1112,7 +1130,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Cantarell" size="24" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="2. 4. 2015"/>
+            <Property name="text" type="java.lang.String" value="1. 8. 2016"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="aboutAuthor">
@@ -1121,6 +1139,14 @@
               <Font name="Cantarell" size="24" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Ivana Dole&#x17e;alov&#xe1;"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="aboutLink">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="0" red="0" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="https://github.com/akarienta/fakturator"/>
           </Properties>
         </Component>
       </SubComponents>
