@@ -19,6 +19,7 @@ Interface is in Czech language only and will be never translated - this software
 - bugfix: contractor and customer has the same width and alingment on invoices
 - bugfix: prices are aligned to right
 - note: if you want to generate an invoice from 1.0 version `*.xml` files just add `taxDate` node into `details` node
+- note: if you want to edit some customers because of IC or DIC just remove them and add again or edit `.fakturator/customers.xml` file in your home directory directly
 
 #### 1.0
 ##### 2015-04-16
