@@ -989,7 +989,7 @@ public class GUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(aboutLicense);
 
         aboutDate.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
-        aboutDate.setText("1. 8. 2016");
+        aboutDate.setText("2. 8. 2016");
 
         aboutAuthor.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
         aboutAuthor.setText("Ivana Doležalová");
@@ -1024,7 +1024,7 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(aboutLink)
                 .addGap(48, 48, 48)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(194, Short.MAX_VALUE))
+                .addContainerGap(134, Short.MAX_VALUE))
         );
 
         getContentPane().add(aboutPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 780, 540));
